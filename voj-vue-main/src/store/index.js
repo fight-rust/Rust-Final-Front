@@ -14,6 +14,7 @@ const rootState = {
     mode: 'Login', // or 'register',
     visible: false
   },
+  isLogin:false,
   websiteConfig: {
     recordName: '© 2020-2021',
     projectName: 'VOJ',
@@ -48,6 +49,9 @@ const rootGetters = {
   },
   'webLanguage'(state) {
     return state.language
+  },
+  'isLoginValue'(state){
+    return state.isLogin
   }
 }
 
@@ -99,6 +103,9 @@ const rootMutations = {
       moment.locale(language);
     }
     storage.set('Web_Language', language)
+  },
+  changeisLogin(state,value){
+    state.isLogin=value;
   }
 }
 const rootActions = {

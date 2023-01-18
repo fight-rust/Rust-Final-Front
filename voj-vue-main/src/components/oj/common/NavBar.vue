@@ -77,7 +77,7 @@
         <!--          }}</el-menu-item>-->
         <!--        </el-submenu>-->
 
-        <template v-if="!isAuthenticated">
+        <template v-if="!$store.getters.isLoginValue">
           <div class="btn-menu">
             <el-button round type="primary" @click="handleBtnClick('Login')"
             >{{ $t('m.NavBar_Login') }}
@@ -96,10 +96,10 @@
               class="drop-menu"
               placement="bottom"
               trigger="click"
-              @command="handleRoute"
+              @command="handleRoute"w
           >
             <span class="el-dropdown-link">
-              {{ userInfo.username }}<i class="el-icon-caret-bottom"></i>
+              欢迎您，{{ $store.getters.userName }}<i class="el-icon-caret-bottom"></i>
             </span>
 
             <el-dropdown-menu slot="dropdown">
@@ -109,10 +109,6 @@
               </el-dropdown-item>
               <el-dropdown-item command="/status?onlyMine=true">{{
                   $t('m.NavBar_Submissions')
-                }}
-              </el-dropdown-item>
-              <el-dropdown-item command="/setting">{{
-                  $t('m.NavBar_Setting')
                 }}
               </el-dropdown-item>
               <el-dropdown-item v-if="isAdminRole" command="/admin">{{
@@ -138,56 +134,6 @@
               placement="bottom"
               @command="handleRoute"
           >
-            <span class="el-dropdown-link">
-              <i class="el-icon-message-solid"></i>
-              <svg
-                  v-if="
-                  unreadMessage.comment > 0 ||
-                    unreadMessage.reply > 0 ||
-                    unreadMessage.like > 0 ||
-                    unreadMessage.sys > 0 ||
-                    unreadMessage.mine > 0
-                "
-                  height="10"
-                  style="vertical-align: top;margin-left: -11px;margin-top: 3px;"
-                  width="10"
-              >
-                <circle cx="5" cy="5" r="5" style="fill: red;"></circle>
-              </svg>
-            </span>
-
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="/message/discuss">
-                <span>{{ $t('m.DiscussMsg') }}</span>
-                <span v-if="unreadMessage.comment > 0" class="drop-msg-count">
-                  <MsgSvg :total="unreadMessage.comment"></MsgSvg>
-                </span>
-              </el-dropdown-item>
-              <el-dropdown-item command="/message/reply">
-                <span>{{ $t('m.ReplyMsg') }}</span>
-                <span v-if="unreadMessage.reply > 0" class="drop-msg-count">
-                  <MsgSvg :total="unreadMessage.reply"></MsgSvg>
-                </span>
-              </el-dropdown-item>
-              <el-dropdown-item command="/message/like">
-                <span>{{ $t('m.LikeMsg') }}</span>
-                <span v-if="unreadMessage.like > 0" class="drop-msg-count">
-                  <MsgSvg :total="unreadMessage.like"></MsgSvg>
-                </span>
-              </el-dropdown-item>
-              <el-dropdown-item command="/message/sys">
-                <span>{{ $t('m.SysMsg') }}</span>
-                <span v-if="unreadMessage.sys > 0" class="drop-msg-count">
-                  <MsgSvg :total="unreadMessage.sys"></MsgSvg>
-                </span>
-              </el-dropdown-item>
-              <el-dropdown-item command="/message/mine">
-                <span>{{ $t('m.MineMsg') }}</span>
-                <span v-if="unreadMessage.mine > 0" class="drop-msg-count">
-                  <MsgSvg :total="unreadMessage.mine"></MsgSvg>
-                </span>
-              </el-dropdown-item>
-            </el-dropdown-menu>
           </el-dropdown>
         </template>
       </el-menu>

@@ -3,6 +3,7 @@ import storage from '@/common/storage'
 
 const state = {
   userInfo: storage.get('userInfo'),
+  userName:'username',
   token: localStorage.getItem('token'),
   loginFailNum: 0,
   unreadMessage: {
@@ -15,6 +16,7 @@ const state = {
 }
 
 const getters = {
+  userName: state => state.userName,
   userInfo: state => state.userInfo || {},
   token: state => state.token || '',
   unreadMessage: state => state.unreadMessage || {},
@@ -55,6 +57,9 @@ const mutations = {
   changeUserToken(state, token) {
     state.token = token
     localStorage.setItem("token", token)
+  },
+  changeusername(state,value){
+    state.userName=value;
   },
   incrLoginFailNum(state, {success}) {
     if (!success) {

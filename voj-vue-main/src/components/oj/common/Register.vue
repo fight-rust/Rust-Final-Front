@@ -11,36 +11,6 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item prop="realname">
-        <el-input
-            v-model="registerForm.realname"
-            :placeholder="$t('m.Register_Realname')"
-            prefix-icon="el-icon-user-solid"
-            width="100%"
-            @keyup.enter.native="handleRegister"
-        ></el-input>
-      </el-form-item>
-
-      <el-form-item prop="school">
-        <el-input
-            v-model="registerForm.school"
-            :placeholder="$t('m.Register_School')"
-            prefix-icon="el-icon-school"
-            width="100%"
-            @keyup.enter.native="handleRegister"
-        ></el-input>
-      </el-form-item>
-
-      <el-form-item prop="number">
-        <el-input
-            v-model="registerForm.number"
-            :placeholder="$t('m.Register_Number')"
-            prefix-icon="el-icon-postcard"
-            width="100%"
-            @keyup.enter.native="handleRegister"
-        ></el-input>
-      </el-form-item>
-
       <el-form-item prop="password">
         <el-input
             v-model="registerForm.password"
@@ -56,32 +26,6 @@
             :placeholder="$t('m.Register_Password_Again')"
             prefix-icon="el-icon-lock"
             type="password"
-            @keyup.enter.native="handleRegister"
-        ></el-input>
-      </el-form-item>
-      <el-form-item prop="email">
-        <el-input
-            v-model="registerForm.email"
-            :placeholder="$t('m.Register_Email')"
-            prefix-icon="el-icon-message"
-            @keyup.enter.native="handleRegister"
-        >
-          <el-button
-              slot="append"
-              :loading="btnEmailLoading"
-              icon="el-icon-message"
-              type="primary"
-              @click.native="sendRegisterEmail"
-          >
-            <span v-show="btnEmailLoading">{{ countdownNum }}</span>
-          </el-button>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="code">
-        <el-input
-            v-model="registerForm.code"
-            :placeholder="$t('m.Register_Email_Captcha')"
-            prefix-icon="el-icon-s-check"
             @keyup.enter.native="handleRegister"
         ></el-input>
       </el-form-item>

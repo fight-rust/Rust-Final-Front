@@ -33,7 +33,7 @@ export const m = {
   Login_Forget_Password: '忘记密码',
   Username_Check_Required: '用户名不能为空',
   Username_Check_Max: '用户名长度不能超过20位',
-  The_username_check_regular: '用户名只能由字母数字下划线组成，并且首字母必须为字母',
+  The_username_check_regular: '由字母数字下划线组成，首位必须为字母，长度不小于6位',
   Password_Check_Required: '密码不能为空',
   Password_Check_Between: '请输入长度为6~20位的密码',
   Welcome_Back: '欢迎回来~',

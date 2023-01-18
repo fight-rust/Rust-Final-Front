@@ -79,9 +79,11 @@ router.beforeEach((to, from, next) => {
         path: '/home'
       })
       store.commit('changeModalStatus', {mode: 'Login', visible: true})
+      store.commit('changeisLogin',false)
     }
-    mMessage.error('Error！Please Login Again!')
+    // mMessage.error('Error！Please Login Again!')
     store.commit("clearUserInfoAndToken");
+    store.commit('changeisLogin',false)
   }
 })
 

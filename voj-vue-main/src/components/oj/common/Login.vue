@@ -74,13 +74,13 @@
       >{{ $t('m.Login_No_Account') }}
       </el-link
       >
-      <el-link
-          style="float: right"
-          type="primary"
-          @click="switchMode('ResetPwd')"
-      >{{ $t('m.Login_Forget_Password') }}
-      </el-link
-      >
+<!--      <el-link-->
+<!--          style="float: right"-->
+<!--          type="primary"-->
+<!--          @click="switchMode('ResetPwd')"-->
+<!--      >{{ $t('m.Login_Forget_Password') }}-->
+<!--      </el-link-->
+<!--      >-->
     </div>
   </div>
 </template>
@@ -169,9 +169,20 @@ export default {
 
                 // const jwt = res.headers['authorization'];
                 // this.$store.commit('changeUserToken', jwt);
-                this.$store.dispatch('setUserInfo', res.data.data);
-                this.$store.dispatch('incrLoginFailNum', true);
-                mMessage.success(this.$i18n.t('m.Welcome_Back'));
+                // this.$store.dispatch('setUserInfo', res.data.data);
+                // this.$store.dispatch('incrLoginFailNum', true);
+
+                let username=res.data.response;
+                if(username!=="fail"){
+                  this.$store.commit('changeusername',username)
+                  this.$store.commit('changeisLogin',true)
+                  mMessage.success(this.$i18n.t('m.Welcome_Back'));
+                }
+                else{
+                  this.$store.commit('changeisLogin',false)
+                  alert("用户名或密码错误！")
+                }
+
               },
               (_) => {
                 this.$store.dispatch('incrLoginFailNum', false);
