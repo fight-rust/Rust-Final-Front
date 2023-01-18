@@ -265,9 +265,16 @@ export default {
           this.btnRegisterLoading = true;
           api.register(formData).then(
               (res) => {
-                mMessage.success(this.$i18n.t('m.Thanks_for_registering'));
-                this.switchMode('Login');
-                this.btnRegisterLoading = false;
+                let response=res.data.response;
+                if(response!=="fail"){
+                  mMessage.success(this.$i18n.t('m.Thanks_for_registering'));
+                  this.switchMode('Login');
+                  this.btnRegisterLoading = false;
+                }
+                else{
+                  alert("用户名已存在！")
+                  this.btnRegisterLoading = false;
+                }
               },
               (res) => {
                 this.registerForm.code = '';

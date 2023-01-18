@@ -167,7 +167,7 @@ const ojApi = {
   },
   // 注册
   register(data) {
-    return ajax('/api/register', 'post', {
+    return ajax('/api/users/register', 'post', {
       data
     })
   },
