@@ -137,7 +137,7 @@
                           class="fa fa-calendar"
                           style="color: #3091f2"
                       ></i>
-                      {{ contest.startTime | localtime }}
+                      {{ contest.start_time | localtime }}
                     </li>
                     <li>
                       <i
@@ -145,7 +145,7 @@
                           class="fa fa-clock-o"
                           style="color: #3091f2"
                       ></i>
-                      {{ getDuration(contest.startTime, contest.endTime) }}
+                      {{ getDuration(contest.start_time, contest.end_time) }}
                     </li>
                     <li>
                       <template v-if="contest.type == 0">
@@ -184,7 +184,7 @@
                         </el-tooltip>
                       </template>
                     </li>
-                    <li>
+                    <!-- <li>
                       <el-tooltip
                           :content="
                           $t('m.' + CONTEST_TYPE_REVERSE[contest.auth].tips)
@@ -203,7 +203,7 @@
                           }}
                         </el-tag>
                       </el-tooltip>
-                    </li>
+                    </li> -->
                     <li v-if="contest.count != null">
                       <i
                           class="el-icon-user-solid"
@@ -218,7 +218,7 @@
                           placement="top"
                       >
                         <el-button
-                            :disabled="contest.status == CONTEST_STATUS.SCHEDULED"
+                            :disabled="0 == CONTEST_STATUS.SCHEDULED"
                             circle
                             icon="el-icon-data-analysis"
                             size="small"
@@ -238,28 +238,28 @@
                     :xs="4"
                     style="text-align: center"
                 >
-                  <el-tag
-                      :color="CONTEST_STATUS_REVERSE[contest.status]['color']"
+                  <!-- <el-tag
+                      :color="CONTEST_STATUS_REVERSE[0]['color']"
                       effect="dark"
                       size="medium"
-                  >
-                    <i aria-hidden="true" class="fa fa-circle"></i>
+                  > -->
+                    <!-- <i aria-hidden="true" class="fa fa-circle"></i>
                     {{
-                      $t('m.' + CONTEST_STATUS_REVERSE[contest.status]['name'])
+                      $t('m.' + CONTEST_STATUS_REVERSE[0]['name'])
                     }}
-                  </el-tag>
+                  </el-tag> -->
                 </el-col>
               </el-row>
             </li>
           </ol>
         </div>
       </el-card>
-      <Pagination
+      <!-- <Pagination
           :current.sync="currentPage"
           :pageSize="limit"
           :total="total"
           @on-change="getContestList"
-      ></Pagination>
+      ></Pagination> -->
     </el-col>
   </el-row>
 </template>
@@ -315,12 +315,14 @@ export default {
       this.currentPage = parseInt(route.currentPage) || 1;
       this.getContestList();
     },
-    getContestList(page = 1) {
+    getContestList() {
+      console.log("Test");
       this.loading = true;
-      api.getContestList(page, this.limit, this.query).then(
+      api.getContestList().then(
           (res) => {
-            this.contests = res.data.data.records;
-            this.total = res.data.data.total;
+            console.log("success",res.data);
+            this.contests = res.data;
+            // this.total = res.data.data.total;
             this.loading = false;
           },
           (err) => {
@@ -379,13 +381,13 @@ export default {
         });
       }
     },
-    getDuration(startTime, endTime) {
-      return time.formatSpecificDuration(startTime, endTime);
+    getDuration(start_time, end_time) {
+      return time.formatSpecificDuration(start_time, end_time);
     },
     getborderColor(contest) {
       return (
           'border-left: 4px solid ' +
-          CONTEST_STATUS_REVERSE[contest.status]['color']
+          CONTEST_STATUS_REVERSE[0]['color']
       );
     },
   },

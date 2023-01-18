@@ -381,21 +381,22 @@ const ojApi = {
 
 
   // 比赛列表页的请求
-  getContestList(currentPage, limit, query) {
-    let params = {
-      currentPage,
-      limit
-    }
-    if (query !== undefined) {
-      Object.keys(query).forEach((element) => {
-        if (query[element]) {
-          params[element] = query[element]
-        }
-      })
-    }
-    return ajax('/api/get-contest-list', 'get', {
-      params: params
-    })
+  getContestList() {
+    // let params = {
+    //   currentPage,
+    //   limit
+    // }
+    // if (query !== undefined) {
+    //   Object.keys(query).forEach((element) => {
+    //     if (query[element]) {
+    //       params[element] = query[element]
+    //     }
+    //   })
+    // }
+    // return ajax('/api/get-contest-list', 'get', {
+    //   params: params
+    // })
+    return ajax('/api/contests', 'get')
   },
 
   // 比赛详情的请求

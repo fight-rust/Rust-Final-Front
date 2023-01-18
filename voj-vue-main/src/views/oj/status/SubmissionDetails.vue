@@ -258,7 +258,7 @@ import utils from '@/common/utils';
 import myMessage from '@/common/message';
 import {addCodeBtn} from '@/common/codeblock';
 import Highlight from '@/components/oj/common/Highlight';
-import {mapGetters} from "_vuex@3.6.2@vuex";
+import {mapGetters} from "vuex";
 
 export default {
   name: 'submissionDetails',
