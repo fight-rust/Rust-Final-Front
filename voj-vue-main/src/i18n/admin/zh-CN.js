@@ -4,7 +4,7 @@ export const m = {
   Login: '登录',
   Please_enter_username: '用户名',
   Please_enter_password: '密码',
-  Admin_Login_Success: '尊敬的管理员，欢迎回来~',
+  Admin_Login_Success: '尊敬的管理员，欢迎回来~（鉴权就写到这一步，并没有写完整的后台管理系统）',
   Please_check_your_username_or_password: '请检查你的用户名或密码',
 
   // /views/admin/Home.vue

@@ -173,7 +173,14 @@ export default {
                 // this.$store.dispatch('incrLoginFailNum', true);
 
                 let username=res.data.response;
+                let ismanager=res.data.ismanager;
                 if(username!=="fail"){
+                  if(ismanager===1){
+                    this.$store.commit('changeAdmin',true)
+                  }
+                  else{
+                    this.$store.commit('changeAdmin',false)
+                  }
                   this.$store.commit('changeusername',username)
                   this.$store.commit('changeisLogin',true)
                   mMessage.success(this.$i18n.t('m.Welcome_Back'));

@@ -6,6 +6,7 @@ const state = {
   userName:'username',
   token: localStorage.getItem('token'),
   loginFailNum: 0,
+  isAdmin:false,
   unreadMessage: {
     comment: 0,
     reply: 0,
@@ -16,6 +17,7 @@ const state = {
 }
 
 const getters = {
+  isAdmin: state => state.isAdmin,
   userName: state => state.userName,
   userInfo: state => state.userInfo || {},
   token: state => state.token || '',
@@ -60,6 +62,9 @@ const mutations = {
   },
   changeusername(state,value){
     state.userName=value;
+  },
+  changeAdmin(state,value){
+    state.isAdmin=value;
   },
   incrLoginFailNum(state, {success}) {
     if (!success) {

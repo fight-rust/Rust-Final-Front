@@ -111,7 +111,7 @@
                   $t('m.NavBar_Submissions')
                 }}
               </el-dropdown-item>
-              <el-dropdown-item v-if="isAdminRole" command="/admin">{{
+              <el-dropdown-item v-if="$store.getters.isAdmin" command="/admin">{{
                   $t('m.NavBar_Management')
                 }}
               </el-dropdown-item>
