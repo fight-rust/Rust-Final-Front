@@ -184,7 +184,7 @@
               width="150"
           >
           <template v-slot="{ row }">
-            <a class="title-a" @click="getProblemUri(row.problemId)">{{
+            <a class="title-a" @click="getProblemUri(row.id)">{{
                 row.id
               }}</a>
           </template>
@@ -197,7 +197,7 @@
               show-overflow
           >
             <template v-slot="{ row }">
-              <a class="title-a" @click="getProblemUri(row.problemId)">{{
+              <a class="title-a" @click="getProblemUri(row.id)">{{
                   row.title
                 }}</a>
             </template>
