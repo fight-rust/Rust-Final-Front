@@ -362,10 +362,8 @@ export default {
       // } else {
         console.log("Test");
         this.$router.push({
-          // name: 'ContestDetails',
           name: 'ContestProblemList',
-          // params: {contestID: contest.id},
-          path:"/contest/"+contest.id
+          params: {contestID: contest.id},
         });
       // }
     },
