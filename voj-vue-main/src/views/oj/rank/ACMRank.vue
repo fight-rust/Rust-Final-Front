@@ -13,20 +13,6 @@
         <div slot="header">
           <span class="panel-title">{{ $t('m.ACM_Ranklist') }}</span>
         </div>
-        <div style="text-align: center;">
-          <el-input
-              v-model="searchUser"
-              :placeholder="$t('m.Rank_Search_Placeholder')"
-              @keyup.enter.native="getRankData(1)"
-          >
-            <el-button
-                slot="append"
-                class="search-btn"
-                icon="el-icon-search"
-                @click="getRankData(1)"
-            ></el-button>
-          </el-input>
-        </div>
       </el-card>
       <vxe-table
           :data="dataRank"
