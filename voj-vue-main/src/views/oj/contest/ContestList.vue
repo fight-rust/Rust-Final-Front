@@ -363,7 +363,7 @@ export default {
         console.log("Test");
         this.$router.push({
           name: 'ContestProblemList',
-          params: {contestID: contest.id},
+          params: {contestID: contest.id,contestTitle:contest.title,startTime:contest.start_time,endTime:contest.end_time},
         });
       }
     },

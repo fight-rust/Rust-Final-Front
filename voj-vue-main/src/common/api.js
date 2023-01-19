@@ -392,9 +392,7 @@ const ojApi = {
 
   // 比赛详情的请求
   getContest(cid) {
-    return ajax('/api/get-contest-info', 'get', {
-      params: {cid}
-    })
+    return ajax('/api/contests/'+cid, 'get')
   },
   // 获取赛外榜单比赛的信息
   getScoreBoardContestInfo(cid) {

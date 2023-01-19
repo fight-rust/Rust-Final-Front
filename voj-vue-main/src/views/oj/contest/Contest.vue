@@ -5,92 +5,25 @@
         <el-card shadow>
           <div class="contest-title">
             <div slot="header">
-              <span class="panel-title">{{ contest.title }}</span>
+              <span class="panel-title">{{ Contest.title }}</span>
             </div>
           </div>
-          <el-row style="margin-top: 10px;">
-            <el-col :span="12" class="text-align:left">
-              <el-tooltip
-                  v-if="contest.user != null && contest.user != undefined"
-                  :content="$t('m.' + CONTEST_TYPE_REVERSE[contest.user]['tips'])"
-                  placement="top"
-              >
-                <el-tag
-                    :type.sync="CONTEST_TYPE_REVERSE[contest.user]['color']"
-                    effect="plain"
-                >
-                  {{ $t('m.' + CONTEST_TYPE_REVERSE[contest.user]['name']) }}
-                </el-tag>
-              </el-tooltip>
-            </el-col>
-            <el-col :span="12" style="text-align:right">
-              <el-button v-if="contest.count != null" plain size="small">
-                <i
-                    class="el-icon-user-solid"
-                    style="color:rgb(48, 145, 242);"
-                ></i
-                >x{{ contest.count }}
-              </el-button>
-              <template v-if="contest.type == 0">
-                <el-button :type="'primary'" size="small">
-                  <i class="fa fa-trophy"></i>
-                  {{ contest.type | parseContestType }}
-                </el-button>
-              </template>
-              <template v-else>
-                <el-tooltip
-                    :content="
-                    $t('m.Contest_Rank') +
-                      '：' +
-                      (contest.oiRankScoreType == 'Recent'
-                        ? $t(
-                            'm.Based_on_The_Recent_Score_Submitted_Of_Each_Problem'
-                          )
-                        : $t(
-                            'm.Based_on_The_Highest_Score_Submitted_For_Each_Problem'
-                          ))
-                  "
-                    placement="top"
-                >
-                  <el-button :type="'warning'" size="small">
-                    <i class="fa fa-trophy"></i>
-                    {{ contest.type | parseContestType }}
-                  </el-button>
-                </el-tooltip>
-              </template>
-            </el-col>
-          </el-row>
           <div class="contest-time">
             <el-row>
               <el-col :md="12" :xs="24" class="left">
                 <p>
                   <i aria-hidden="true" class="fa fa-hourglass-start"></i>
-                  {{ $t('m.StartAt') }}：{{ contest.startTime | localtime }}
+                  {{ $t('m.StartAt') }}：{{ Contest.start_time | localtime }}
                 </p>
               </el-col>
               <el-col :md="12" :xs="24" class="right">
                 <p>
                   <i aria-hidden="true" class="fa fa-hourglass-end"></i>
-                  {{ $t('m.EndAt') }}：{{ contest.endTime | localtime }}
+                  {{ $t('m.EndAt') }}：{{ Contest.end_time | localtime }}
                 </p>
               </el-col>
             </el-row>
           </div>
-          <div class="slider">
-            <el-slider
-                v-model="progressValue"
-                :format-tooltip="formatTooltip"
-                :step="timeStep"
-            ></el-slider>
-          </div>
-          <el-row>
-            <el-col :span="24" style="text-align:center">
-              <el-tag :style="countdownColor" effect="dark" size="medium">
-                <i aria-hidden="true" class="fa fa-circle"></i>
-                {{ countdown }}
-              </el-tag>
-            </el-col>
-          </el-row>
         </el-card>
       </el-col>
     </el-row>
@@ -99,56 +32,65 @@
         <!--题目-->
         <el-tab-pane :disabled="contestMenuDisabled" lazy name="ContestProblemList">
           <span slot="label"><i aria-hidden="true" class="fa fa-list"></i>&nbsp;{{ $t('m.Problem') }}</span>
-          <!-- 判断是否需要密码验证 -->
-          <el-card v-if="passwordFormVisible" class="password-form-card" style="text-align:center;margin-bottom:15px">
-            <div slot="header">
-              <span class="panel-title" style="color: #e6a23c;"
-              ><i class="el-icon-warning">
-                  {{ $t('m.Password_Required') }}</i
-              ></span
+          <vxe-table
+          ref="problemList"
+          :data="problemList"
+          auto-resize
+          border="inner"
+          stripe
+          @cell-mouseenter="cellHover"
+      >
+        <vxe-table-column v-if="isAuthenticated" title="" width="30">
+          <template v-slot="{ row }">
+            <template v-if="isGetStatusOk">
+              <el-tooltip
+                  :content="JUDGE_STATUS[row.myStatus]['name']"
+                  placement="top"
               >
-            </div>
-            <p class="password-form-tips">
-              {{ $t('m.To_Enter_Need_Password') }}
-            </p>
-            <el-form>
-              <el-input
-                  v-model="contestPassword"
-                  :placeholder="$t('m.Enter_the_contest_password')"
-                  style="width:70%"
-                  type="password"
-                  @keydown.enter.native="checkPassword"
-              />
-              <el-button
-                  style="float:right;"
-                  type="primary"
-                  @click="checkPassword"
-              >{{ $t('m.Enter') }}
-              </el-button
-              >
-            </el-form>
-          </el-card>
-          <div v-if="!contestMenuDisabled">
-            <transition name="el-collapse-transition">
-              <router-view
-                  v-if="route_name === 'ContestProblemList'"
-              ></router-view>
-            </transition>
-          </div>
-        </el-tab-pane>
+                <template v-if="row.myStatus == 0">
+                  <i
+                      :style="getIconColor(row.myStatus)"
+                      class="el-icon-check"
+                  ></i>
+                </template>
 
-        <!--简介-->
-        <el-tab-pane :disabled="passwordFormVisible" lazy name="ContestDetails">
-          <span slot="label"><i class="el-icon-info"></i>&nbsp;{{ $t('m.Overview') }}</span>
-          <!--内容-->
-          <el-card class="box-card">
-            <div
-                v-highlight
-                class="markdown-body"
-                v-html="descriptionHtml"
-            ></div>
-          </el-card>
-        </el-tab-pane>
+                <template v-else-if="row.myStatus != -10">
+                  <i
+                      :style="getIconColor(row.myStatus)"
+                      class="el-icon-minus"
+                  ></i>
+                </template>
+              </el-tooltip>
+            </template>
+          </template>
+        </vxe-table-column>
+        <vxe-table-column
+            :title="$t('m.Problem_ID')"
+            field="problemId"
+            show-overflow
+            width="150"
+        >
+        <template v-slot="{ row }">
+          <a class="title-a" @click="getProblemUri(row.id)">{{
+              row.id
+            }}</a>
+        </template>
+      </vxe-table-column>
+
+        <vxe-table-column
+            title="题目标题"
+            field="title"
+            min-width="150"
+            show-overflow
+        >
+          <template v-slot="{ row }">
+            <a class="title-a" @click="getProblemUri(row.id)">{{
+                row.title
+              }}</a>
+          </template>
+        </vxe-table-column>
+      </vxe-table>
+      </el-tab-pane>
 
         <!--提交-->
         <el-tab-pane :disabled="contestMenuDisabled" lazy name="ContestSubmissionList">
@@ -161,7 +103,7 @@
         </el-tab-pane>
 
         <!--rank-->
-        <el-tab-pane :disabled="contestMenuDisabled" lazy name="ContestRank">
+        <!-- <el-tab-pane :disabled="contestMenuDisabled" lazy name="ContestRank">
           <span slot="label"
           ><i aria-hidden="true" class="fa fa-bar-chart"></i>&nbsp;{{
               $t('m.NavBar_Rank')
@@ -170,10 +112,10 @@
           <transition name="el-collapse-transition">
             <router-view v-if="route_name === 'ContestRank'"></router-view>
           </transition>
-        </el-tab-pane>
+        </el-tab-pane> -->
 
         <!--公告-->
-        <el-tab-pane :disabled="contestMenuDisabled" lazy name="ContestAnnouncementList">
+        <!-- <el-tab-pane :disabled="contestMenuDisabled" lazy name="ContestAnnouncementList">
           <span slot="label"
           ><i aria-hidden="true" class="fa fa-bullhorn"></i>&nbsp;{{
               $t('m.Announcement')
@@ -184,34 +126,34 @@
                 v-if="route_name === 'ContestAnnouncementList'"
             ></router-view>
           </transition>
-        </el-tab-pane>
+        </el-tab-pane> -->
 
         <!--讨论-->
-        <el-tab-pane :disabled="contestMenuDisabled" lazy name="ContestComment">
+        <!-- <el-tab-pane :disabled="contestMenuDisabled" lazy name="ContestComment">
           <span slot="label"><i aria-hidden="true" class="fa fa-commenting"></i>&nbsp;{{ $t('m.Comment') }}</span>
           <transition name="el-collapse-transition">
             <router-view v-if="route_name === 'ContestComment'"></router-view>
           </transition>
-        </el-tab-pane>
+        </el-tab-pane> -->
 
         <!--打印-->
-        <el-tab-pane v-if="contest.openPrint" :disabled="contestMenuDisabled" lazy name="ContestPrint">
+        <!-- <el-tab-pane v-if="contest.openPrint" :disabled="contestMenuDisabled" lazy name="ContestPrint">
           <span slot="label"><i class="el-icon-printer"></i>&nbsp;{{ $t('m.Print') }}</span>
           <transition name="el-collapse-transition">
             <router-view v-if="route_name === 'ContestPrint'"></router-view>
           </transition>
-        </el-tab-pane>
+        </el-tab-pane> -->
 
         <!--admin helper-->
-        <el-tab-pane v-if="showAdminHelper" :disabled="contestMenuDisabled" lazy name="ContestACInfo">
+        <!-- <el-tab-pane v-if="showAdminHelper" :disabled="contestMenuDisabled" lazy name="ContestACInfo">
           <span slot="label"><i aria-hidden="true" class="el-icon-s-help"></i>&nbsp;{{ $t('m.Admin_Helper') }}</span>
           <transition name="el-collapse-transition">
             <router-view v-if="route_name === 'ContestACInfo'"></router-view>
           </transition>
-        </el-tab-pane>
+        </el-tab-pane> -->
 
         <!--admin打印-->
-        <el-tab-pane v-if="isSuperAdmin && contest.openPrint" :disabled="contestMenuDisabled" lazy
+        <!-- <el-tab-pane v-if="isSuperAdmin && contest.openPrint" :disabled="contestMenuDisabled" lazy
                      name="ContestAdminPrint">
           <span slot="label"><i class="el-icon-printer"></i>&nbsp;{{ $t('m.Admin_Print') }}</span>
           <transition name="el-collapse-transition">
@@ -219,10 +161,10 @@
                 v-if="route_name === 'ContestAdminPrint'"
             ></router-view>
           </transition>
-        </el-tab-pane>
+        </el-tab-pane> -->
 
         <!--重测-->
-        <el-tab-pane v-if="isSuperAdmin" :disabled="contestMenuDisabled" lazy name="ContestRejudgeAdmin">
+        <!-- <el-tab-pane v-if="isSuperAdmin" :disabled="contestMenuDisabled" lazy name="ContestRejudgeAdmin">
           <span slot="label"
           ><i aria-hidden="true" class="el-icon-refresh"></i>&nbsp;{{
               $t('m.Rejudge')
@@ -233,7 +175,7 @@
                 v-if="route_name === 'ContestRejudgeAdmin'"
             ></router-view>
           </transition>
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
     </div>
   </div>
@@ -264,13 +206,15 @@ export default {
       CONTEST_STATUS_REVERSE: {},
       CONTEST_TYPE_REVERSE: {},
       RULE_TYPE: {},
-      btnLoading: false,
-      contestPassword: '',
+      Contest:{},
+      problemList:[],
+      // btnLoading: false,
+      // contestPassword: '',
     };
   },
   created() {
-    console.log("in");
     this.contestID = this.$route.params.contestID;
+    console.log("contestId",this.contestID)
     this.route_name = this.$route.name;
     // this.route_name = 'ContestProblemList';
     if (this.route_name == 'ContestProblemDetails') {
@@ -283,91 +227,71 @@ export default {
     this.CONTEST_STATUS = Object.assign({}, CONTEST_STATUS);
     this.CONTEST_STATUS_REVERSE = Object.assign({}, CONTEST_STATUS_REVERSE);
     this.RULE_TYPE = Object.assign({}, RULE_TYPE);
-    this.$store.dispatch('getContest').then((res) => {
-      this.changeDomTitle({title: res.data.data.title});
-      let data = res.data.data;
-      let endTime = moment(data.endTime);
-      // 如果当前时间还是在比赛结束前的时间，需要计算倒计时，同时开启获取比赛公告的定时器
-      if (endTime.isAfter(moment(data.now))) {
-        // 实时更新时间
-        this.timer = setInterval(() => {
-          this.$store.commit('nowAdd1s');
-        }, 1000);
-
-        // 每分钟获取一次是否存在未阅读的公告
-        // this.announceTimer = setInterval(() => {
-        //   let key = buildContestAnnounceKey(this.userInfo.uid, this.contestID);
-        //  let readAnnouncementList = storage.get(key) || [];
-        //   let data = {
-        //     cid: this.contestID,
-        //     readAnnouncementList: readAnnouncementList,
-        //   };
-
-        //   api.getContestUserNotReadAnnouncement(data).then((res) => {
-        //     let newAnnounceList = res.data.data;
-        //     for (let i = 0; i < newAnnounceList.length; i++) {
-        //       readAnnouncementList.push(newAnnounceList[i].id);
-        //       this.$notify({
-        //         title: newAnnounceList[i].title,
-        //         message:
-        //             '<p style="text-align:center;"><i class="el-icon-time"> ' +
-        //             time.utcToLocal(newAnnounceList[i].gmtCreate) +
-        //             '</i></p>' +
-        //             '<p style="text-align:center;color:#409eff">' +
-        //             this.$i18n.t(
-        //                 'm.Please_check_the_contest_announcement_for_details'
-        //             ) +
-        //             '</p>',
-        //         type: 'warning',
-        //         dangerouslyUseHTMLString: true,
-        //         duration: 0,
-        //       });
-        //     }
-        //     storage.set(key, readAnnouncementList);
-        //   });
-        // }, 60 * 1000); 
-      }
-
-      this.$nextTick((_) => {
-        addCodeBtn();
-      });
+    api.getContest(this.contestID).then((res) => {
+      console.log("test",res.data);
+      this.Contest = res.data;
+      console.log("length",res.data.problem_ids.length);
+      for( let i=0;i<res.data.problem_ids.length;i++){
+        let qId=res.data.problem_ids[i];
+        // console.log(qi)
+        api.getProblem(qId).then(
+          (res) => {
+            console.log("success");
+            console.log("Res",res);
+            let result={};
+            result= res.data;
+            this.problemList.push(result);
+          },
+          (err) => {
+            console.log("fail");
+            this.loading = false;
+          });
+        }
     });
 
   },
   methods: {
-    ...mapActions(['changeDomTitle']),
-    formatTooltip(val) {
-      if (this.contest.status == -1) {
-        // 还未开始
-        return '00:00:00';
-      } else if (this.contest.status == 0) {
-        return time.secondFormat(this.BeginToNowDuration); // 格式化时间
-      } else {
-        return time.secondFormat(this.contest.duration);
-      }
-    },
-    checkPassword() {
-      // if (this.contestPassword === '') {
-      //   myMessage.warning(this.$i18n.t('m.Enter_the_contest_password'));
-      //   return;
-      // }
-      this.btnLoading = true;
-      api.registerContest(this.contestID + '', this.contestPassword).then(
-          (res) => {
-            myMessage.success(this.$i18n.t('m.Register_contest_successfully'));
-            this.$store.commit('contestIntoAccess', {intoAccess: true});
-            this.btnLoading = false;
-          },
-          (res) => {
-            this.btnLoading = false;
-          }
-      );
-    },
+    // ...mapActions(['changeDomTitle']),
+    // formatTooltip(val) {
+    //   if (this.contest.status == -1) {
+    //     // 还未开始
+    //     return '00:00:00';
+    //   } else if (this.contest.status == 0) {
+    //     return time.secondFormat(this.BeginToNowDuration); // 格式化时间
+    //   } else {
+    //     return time.secondFormat(this.contest.duration);
+    //   }
+    // },
+    // checkPassword() {
+    //   if (this.contestPassword === '') {
+    //     myMessage.warning(this.$i18n.t('m.Enter_the_contest_password'));
+    //     return;
+    //   }
+    //   this.btnLoading = true;
+    //   api.registerContest(this.contestID + '', this.contestPassword).then(
+    //       (res) => {
+    //         myMessage.success(this.$i18n.t('m.Register_contest_successfully'));
+    //         this.$store.commit('contestIntoAccess', {intoAccess: true});
+    //         this.btnLoading = false;
+    //       },
+    //       (res) => {
+    //         this.btnLoading = false;
+    //       }
+    //   );
+    // },
     tabClick(tab) {
       let name = tab.name;
       if (name !== this.$route.name) {
         this.$router.push({name: name});
       }
+    },
+   getProblemUri(problemId) {
+      this.$router.push({
+        name: 'ProblemDetails',
+        params: {
+          problemID: problemId,
+        },
+      });
     },
   },
   computed: {
@@ -425,7 +349,7 @@ export default {
         this.route_name = 'ContestSubmissionList';
       }
       this.contestID = newVal.params.contestID;
-      this.changeDomTitle({title: this.contest.title});
+      // this.changeDomTitle({title: this.contest.title});
     },
   },
   beforeDestroy() {

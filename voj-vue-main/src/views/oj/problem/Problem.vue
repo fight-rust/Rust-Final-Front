@@ -1049,7 +1049,7 @@ export default {
                   });
             }
 
-            this.isRemote = result.problem.isRemote;
+            // this.isRemote = result.problem.isRemote;
             this.changePie(result.problemCount);
 
             // 在beforeRouteEnter中修改了, 说明本地有code，无需加载template
