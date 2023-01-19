@@ -55,10 +55,6 @@
               $t('m.Create_Problem')
             }}
           </el-menu-item>
-          <el-menu-item index="/admin/problem/tag">{{
-              $t('m.Admin_Tag')
-            }}
-          </el-menu-item>
           <el-menu-item
               v-if="isSuperAdmin"
               index="/admin/problem/batch-operation"
@@ -79,42 +75,6 @@
           </el-menu-item>
           <el-menu-item index="/admin/contest/create">{{
               $t('m.Create_Contest')
-            }}
-          </el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="training">
-          <template slot="title"
-          ><i
-              aria-hidden="true"
-              class="el-icon-s-claim"
-              style="font-size: 20px;"
-          ></i
-          >{{ $t('m.Training_Admin') }}
-          </template
-          >
-          <el-menu-item index="/admin/training">{{
-              $t('m.Training_List')
-            }}
-          </el-menu-item>
-          <el-menu-item index="/admin/training/create">{{
-              $t('m.Create_Training')
-            }}
-          </el-menu-item>
-          <el-menu-item index="/admin/training/category">{{
-              $t('m.Admin_Category')
-            }}
-          </el-menu-item>
-        </el-submenu>
-
-        <el-submenu index="discussion">
-          <template slot="title"
-          ><i aria-hidden="true" class="fa fa-comments fa-size"></i
-          >{{ $t('m.Discussion') }}
-          </template
-          >
-          <el-menu-item index="/admin/discussion">{{
-              $t('m.Discussion_Admin')
             }}
           </el-menu-item>
         </el-submenu>

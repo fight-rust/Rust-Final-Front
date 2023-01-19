@@ -5,86 +5,7 @@
         <span class="panel-title home-title">{{
             query.contestId ? $t('m.Contest_Problem_List') : $t('m.Problem_List')
           }}</span>
-        <div class="filter-row">
-          <span>
-            <el-button
-                icon="el-icon-plus"
-                size="small"
-                type="primary"
-                @click="goCreateProblem"
-            >{{ $t('m.Create') }}
-            </el-button>
-          </span>
-          <span v-if="query.contestId">
-            <el-button
-                icon="el-icon-plus"
-                size="small"
-                type="primary"
-                @click="addProblemDialogVisible = true"
-            >{{ $t('m.Add_From_Public_Problem') }}
-            </el-button>
-          </span>
-          <span>
-            <el-button
-                icon="el-icon-plus"
-                size="small"
-                type="success"
-                @click="AddRemoteOJProblemDialogVisible = true"
-            >{{ $t('m.Add_Remote_OJ_Problem') }}
-            </el-button>
-          </span>
-          <span>
-            <vxe-input
-                v-model="query.keyword"
-                :placeholder="$t('m.Enter_keyword')"
-                size="medium"
-                type="search"
-                @search-click="filterByKeyword"
-                @keyup.enter.native="filterByKeyword"
-            ></vxe-input>
-          </span>
 
-          <span>
-            <el-select
-                v-model="query.oj"
-                size="small"
-                style="width: 180px;"
-                @change="ProblemListChangeFilter"
-            >
-              <el-option
-                  :label="$t('m.All_Problem')"
-                  :value="'All'"
-              ></el-option>
-              <el-option :label="$t('m.My_OJ')" :value="'LOCAL'"></el-option>
-              <el-option
-                  v-for="(remoteOj, index) in REMOTE_OJ"
-                  :key="index"
-                  :label="remoteOj.name"
-                  :value="remoteOj.key"
-              ></el-option>
-            </el-select>
-          </span>
-
-          <span v-if="!query.contestId">
-            <el-select
-                v-model="query.problemListAuth"
-                size="small"
-                style="width: 180px;"
-                @change="ProblemListChangeFilter"
-            >
-              <el-option :label="$t('m.All_Problem')" :value="0"></el-option>
-              <el-option :label="$t('m.Public_Problem')" :value="1"></el-option>
-              <el-option
-                  :label="$t('m.Private_Problem')"
-                  :value="2"
-              ></el-option>
-              <el-option
-                  :label="$t('m.Contest_Problem')"
-                  :value="3"
-              ></el-option>
-            </el-select>
-          </span>
-        </div>
       </div>
       <vxe-table
           ref="adminProblemList"
@@ -94,205 +15,10 @@
           auto-resize
           stripe
       >
-        <vxe-table-column field="id" min-width="64" title="ID">
-        </vxe-table-column>
-        <vxe-table-column
-            v-if="!isContest"
-            :title="$t('m.Display_ID')"
-            field="problemId"
-            min-width="120"
-            show-overflow
-        >
-        </vxe-table-column>
+        <vxe-table-column field="pid" min-width="64" title="题目ID"></vxe-table-column>
+        <vxe-table-column field="ptitle" min-width="64" title="题目标题"></vxe-table-column>
 
-        <vxe-table-column
-            v-else
-            :title="$t('m.Original_Display')"
-            align="left"
-            min-width="120"
-        >
-          <template v-slot="{ row }">
-            <p v-if="query.contestId">
-              {{ $t('m.Display_ID') }}：{{ row.problemId }}
-            </p>
-            <p v-if="query.contestId">{{ $t('m.Title') }}：{{ row.title }}</p>
-            <span v-else>{{ row.problemId }}</span>
-          </template>
-        </vxe-table-column>
-
-        <vxe-table-column
-            v-if="!isContest"
-            :title="$t('m.Title')"
-            field="title"
-            min-width="150"
-            show-overflow
-        >
-        </vxe-table-column>
-
-        <vxe-table-column
-            v-else
-            :title="$t('m.Contest_Display')"
-            align="left"
-            min-width="150"
-        >
-          <template v-slot="{ row }">
-            <p v-if="contestProblemMap[row.id]">
-              {{ $t('m.Display_ID') }}：{{
-                contestProblemMap[row.id]['displayId']
-              }}
-            </p>
-            <p v-if="contestProblemMap[row.id]">
-              {{ $t('m.Title') }}：{{
-                contestProblemMap[row.id]['displayTitle']
-              }}
-            </p>
-            <span v-if="contestProblemMap[row.id]">
-              {{ $t('m.Balloon_Color') }}：<el-color-picker
-                v-model="contestProblemMap[row.id].color"
-                :predefine="predefineColors"
-                show-alpha
-                size="small"
-                style="vertical-align: middle;"
-                @change="
-                  changeContestProblemColor(
-                    contestProblemMap[row.id].id,
-                    contestProblemMap[row.id].color
-                  )
-                "
-            >
-              </el-color-picker>
-            </span>
-            <span v-else>{{ row.title }}</span>
-          </template>
-        </vxe-table-column>
-
-        <vxe-table-column
-            :title="$t('m.Author')"
-            field="author"
-            min-width="120"
-            show-overflow
-        >
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Created_Time')" min-width="130">
-          <template v-slot="{ row }">
-            {{ row.gmtCreate | localtime }}
-          </template>
-        </vxe-table-column>
-        <vxe-table-column
-            :title="$t('m.Modified_User')"
-            field="modifiedUser"
-            min-width="96"
-            show-overflow
-        >
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Auth')" min-width="120">
-          <template v-slot="{ row }">
-            <el-select
-                v-model="row.auth"
-                :disabled="!isSuperAdmin && !isProblemAdmin && !query.contestId"
-                size="small"
-                @change="changeProblemAuth(row)"
-            >
-              <el-option
-                  :disabled="!isSuperAdmin && !isProblemAdmin"
-                  :label="$t('m.Public_Problem')"
-                  :value="1"
-              ></el-option>
-              <el-option
-                  :label="$t('m.Private_Problem')"
-                  :value="2"
-              ></el-option>
-              <el-option
-                  :disabled="!query.contestId"
-                  :label="$t('m.Contest_Problem')"
-                  :value="3"
-              ></el-option>
-            </el-select>
-          </template>
-        </vxe-table-column>
-        <vxe-table-column min-width="200" title="Option">
-          <template v-slot="{ row }">
-            <el-tooltip
-                v-if="
-                isSuperAdmin ||
-                  isProblemAdmin ||
-                  row.author == userInfo.username
-              "
-                :content="$t('m.Edit')"
-                effect="dark"
-                placement="top"
-            >
-              <el-button
-                  icon="el-icon-edit-outline"
-                  size="mini"
-                  type="primary"
-                  @click.native="goEdit(row.id)"
-              >
-              </el-button>
-            </el-tooltip>
-
-            <el-tooltip
-                v-if="isSuperAdmin || isProblemAdmin"
-                :content="$t('m.Download_Testcase')"
-                effect="dark"
-                placement="top"
-            >
-              <el-button
-                  icon="el-icon-download"
-                  size="mini"
-                  type="success"
-                  @click.native="downloadTestCase(row.id)"
-              >
-              </el-button>
-            </el-tooltip>
-
-            <el-tooltip
-                v-if="query.contestId"
-                :content="$t('m.Remove')"
-                effect="dark"
-                placement="top"
-            >
-              <el-button
-                  icon="el-icon-close"
-                  size="mini"
-                  type="warning"
-                  @click.native="removeProblem(row.id)"
-              >
-              </el-button>
-            </el-tooltip>
-
-            <el-tooltip
-                v-if="!isContest && (isSuperAdmin || isProblemAdmin)"
-                :content="$t('m.Delete')"
-                effect="dark"
-                placement="top"
-            >
-              <el-button
-                  icon="el-icon-delete-solid"
-                  size="mini"
-                  type="danger"
-                  @click.native="deleteProblem(row.id)"
-              >
-              </el-button>
-            </el-tooltip>
-          </template>
-        </vxe-table-column>
       </vxe-table>
-
-      <div class="panel-options">
-        <el-pagination
-            v-if="showPagination"
-            :current-page.sync="query.currentPage"
-            :page-size="query.pageSize"
-            :page-sizes="[10, 30, 50, 100]"
-            :total="total"
-            class="page"
-            layout="prev, pager, next, sizes"
-            @current-change="currentChange"
-            @size-change="onPageSizeChange"
-        >
-        </el-pagination>
-      </div>
     </el-card>
 
     <el-dialog
@@ -505,6 +231,10 @@ export default {
       if (this.routeName === 'admin-problem-list') {
         api.admin_getProblemList(params).then(
             (res) => {
+              for(let i=0;i<res.data.pid.length;i++){
+                let temp={pid:res.data.pid[i],ptitle:res.data.ptitle[i]};
+                this.problemList.push(temp);
+              }
               this.loading = false;
               this.showPagination = true;
               this.total = res.data.data.total;
@@ -519,6 +249,7 @@ export default {
       } else {
         api.admin_getContestProblemList(params).then(
             (res) => {
+
               this.loading = false;
               this.showPagination = false;
               this.total = res.data.data.problemList.total;

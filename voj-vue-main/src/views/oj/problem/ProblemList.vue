@@ -181,7 +181,7 @@
               :title="$t('m.Problem_ID')"
               field="problemId"
               show-overflow
-              width="150"
+
           >
           <template v-slot="{ row }">
             <a class="title-a" @click="getProblemUri(row.id)">{{
@@ -193,7 +193,7 @@
           <vxe-table-column
               title="题目标题"
               field="title"
-              min-width="150"
+
               show-overflow
           >
             <template v-slot="{ row }">

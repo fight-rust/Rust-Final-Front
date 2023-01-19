@@ -360,7 +360,6 @@ export default {
         myMessage.warning(this.$i18n.t('m.Please_login_first'));
         this.$store.dispatch('changeModalStatus', {visible: true});
       } else {
-        console.log("Test");
         this.$router.push({
           name: 'ContestProblemList',
           params: {contestID: contest.id,contestTitle:contest.title,startTime:contest.start_time,endTime:contest.end_time},

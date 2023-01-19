@@ -922,9 +922,7 @@ const adminApi = {
 
   admin_getProblemList(params) {
     params = utils.filterEmptyValue(params)
-    return ajax('/api/admin/problem/get-problem-list', 'get', {
-      params
-    })
+    return ajax('/api/admin/problem/getproblemlist', 'post')
   },
 
   admin_addRemoteOJProblem(name, problemId) {
