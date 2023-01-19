@@ -1,14 +1,6 @@
 <template>
   <el-row justify="space-around" type="flex">
     <el-col :span="24">
-<!--      <el-card :padding="10">-->
-<!--        <div slot="header">-->
-<!--          <span class="panel-title">{{ $t('m.ACM_Ranklist') }}</span>-->
-<!--        </div>-->
-<!--        <div class="echarts">-->
-<!--          <ECharts ref="chart" :autoresize="true" :options="options"></ECharts>-->
-<!--        </div>-->
-<!--      </el-card>-->
       <el-card :padding="10" >
         <div slot="header">
           <span class="panel-title">{{ $t('m.ACM_Ranklist') }}</span>
@@ -23,77 +15,29 @@
           highlight-hover-row
           style="font-weight: 500;"
       >
-        <vxe-table-column min-width="50" type="seq"></vxe-table-column>
-        <vxe-table-column
-            :title="$t('m.User')"
-            align="left"
-            field="username"
-            min-width="150"
-            show-overflow
-        >
-          <template v-slot="{ row }">
-            <avatar
-                :inline="true"
-                :size="25"
-                :src="row.avatar"
-                :username="row.username"
-                class="user-avatar"
-                color="#FFF"
-            ></avatar>
-            <a
-                style="color:#2d8cf0;"
-                @click="getInfoByUsername(row.uid, row.username)"
-            >{{ row.username }}</a
-            >
-          </template>
+        <vxe-table-column title="排名" min-width="50" type="seq"></vxe-table-column>
+        <vxe-table-column :title="$t('m.User')" field="uname" min-width="150">
         </vxe-table-column>
-        <vxe-table-column
-            :title="$t('m.Nickname')"
-            field="nickname"
-            width="160"
-        >
-          <template v-slot="{ row }">
-            <el-tag
-                v-if="row.nickname"
-                :type="nicknameColor(row.nickname)"
-                effect="plain"
-                size="small"
-            >
-              {{ row.nickname }}
-            </el-tag>
-          </template>
+<!--        <vxe-table-column :title="$t('m.AC')" field="ac" min-width="80">-->
+<!--          <template v-slot="{ row }">-->
+<!--            <span>-->
+<!--              <a-->
+<!--                  style="color:rgb(87, 163, 243);"-->
+<!--                  @click="goUserACStatus(row.username)"-->
+<!--              >{{ row.ac }}</a-->
+<!--              >-->
+<!--            </span>-->
+<!--          </template>-->
+<!--        </vxe-table-column>-->
+        <vxe-table-column :title="$t('m.Total')" field="uacnum" min-width="100">
         </vxe-table-column>
-        <vxe-table-column :title="$t('m.AC')" field="ac" min-width="80">
-          <template v-slot="{ row }">
-            <span>
-              <a
-                  style="color:rgb(87, 163, 243);"
-                  @click="goUserACStatus(row.username)"
-              >{{ row.ac }}</a
-              >
-            </span>
-          </template>
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Total')" field="total" min-width="100">
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Rating')" min-width="80">
-          <template v-slot="{ row }">
-            <span>{{ getACRate(row.ac, row.total) }}</span>
-          </template>
-        </vxe-table-column>
-        <vxe-table-column
-            :title="$t('m.Signature')"
-            align="left"
-            field="signature"
-            min-width="300"
-            show-overflow="ellipsis"
-        >
-          <template v-slot="{ row }">
-            <span v-if="row.signature" v-katex class="rank-signature-body">{{
-                row.signature
-              }}</span>
-          </template>
-        </vxe-table-column>
+<!--        <vxe-table-column :title="$t('m.Rating')" min-width="80">-->
+<!--          <template v-slot="{ row }">-->
+<!--            <span>{{ getACRate(row.ac, row.total) }}</span>-->
+<!--          </template>-->
+<!--        </vxe-table-column>-->
+<!--        <vxe-table-column :title="$t('m.Signature')" field="signature" min-width="300" show-overflow="ellipsis">-->
+<!--        </vxe-table-column>-->
       </vxe-table>
 
       <Pagination
@@ -126,12 +70,15 @@ export default {
   data() {
     return {
       page: 1,
-      limit: 50,
+      limit: 5000,
       total: 0,
       searchUser: null,
       loadingTable: false,
       screenWidth: 768,
-      dataRank: [],
+
+      dataRank: [
+
+      ],
       options: {
         tooltip: {
           trigger: 'axis',
@@ -233,16 +180,19 @@ export default {
     getRankData(page) {
       // let bar = this.$refs.chart;
       // bar.showLoading({maskColor: 'rgba(250, 250, 250, 0.8)'});
+
       this.loadingTable = true;
       api
           .getUserRank(page, this.limit, RULE_TYPE.ACM, this.searchUser)
           .then((res) => {
             this.loadingTable = false;
+            for(let i=0;i<res.data.uname.length;i++){
+              let temp={uname:res.data.uname[i],uacnum:res.data.uacnum[i]}
+              this.dataRank.push(temp);
+            }
             if (page === 1) {
               this.changeCharts(res.data.data.records.slice(0, 10));
             }
-            this.total = res.data.data.total;
-            this.dataRank = res.data.data.records;
             bar.hideLoading();
           })
           .catch(() => {

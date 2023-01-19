@@ -165,7 +165,7 @@ export const m = {
   Contest_Time: '比赛时间',
   Recent_Contest: '近期比赛',
   Problem_ID: '题目ID',
-  Total: '总数',
+  Total: 'AC总数',
   AC_Rate: 'AC 通过率',
   Score: '分数',
 
@@ -272,7 +272,7 @@ export const m = {
   ACM_Ranklist: 'ACM 排行榜',
   User: '用户',
   Nickname: '昵称',
-  Signature: '个性简介',
+  Signature: '排名',
   Rating: '通过率',
   Rank_Search_Placeholder: '请输入查询的用户名、昵称或真实姓名',
 
