@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="18">
-    <el-col>
+    <el-col :lg="18" :md="18" :sm="24">
       <el-card shadow>
         <div slot="header">
           <el-row :gutter="20" style="margin-bottom: 0.5em;">
@@ -271,7 +271,6 @@
           @on-page-size-change="onPageSizeChange"
       ></Pagination>
     </el-col>
-<<<<<<< HEAD
 
     <el-col :lg="6" :md="6" :sm="24">
       <el-card :padding="10" style="margin-top:0px">
@@ -329,8 +328,6 @@
         </template>
       </el-card>
     </el-col>
-=======
->>>>>>> e415dedbf6db1d38fd435ea9fcae170a1d163a58
   </el-row>
 </template>
 

@@ -316,7 +316,6 @@ export default {
       this.getContestList();
     },
     getContestList() {
-      
       this.loading = true;
       api.getContestList().then(
           (res) => {
@@ -330,14 +329,14 @@ export default {
           }
       );
     },
-    // filterByChange() {
-    //   let query = Object.assign({}, this.query);
-    //   query.currentPage = this.currentPage;
-    //   this.$router.push({
-    //     name: 'ContestList',
-    //     query: utils.filterEmptyValue(query),
-    //   });
-    // },
+    filterByChange() {
+      let query = Object.assign({}, this.query);
+      query.currentPage = this.currentPage;
+      this.$router.push({
+        name: 'ContestList',
+        query: utils.filterEmptyValue(query),
+      });
+    },
 
     parseContestType(type) {
       if (type == 0) {
@@ -394,14 +393,14 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'userInfo']),
+    // ...mapGetters(['isAuthenticated', 'userInfo']),
   },
   watch: {
-    $route(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.init();
-      }
-    },
+    // $route(newVal, oldVal) {
+    //   if (newVal !== oldVal) {
+    //     this.init();
+    //   }
+    // },
   },
 };
 </script>

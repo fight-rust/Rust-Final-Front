@@ -11,15 +11,15 @@
           <el-row style="margin-top: 10px;">
             <el-col :span="12" class="text-align:left">
               <el-tooltip
-                  v-if="contest.auth != null && contest.auth != undefined"
-                  :content="$t('m.' + CONTEST_TYPE_REVERSE[contest.auth]['tips'])"
+                  v-if="contest.user != null && contest.user != undefined"
+                  :content="$t('m.' + CONTEST_TYPE_REVERSE[contest.user]['tips'])"
                   placement="top"
               >
                 <el-tag
-                    :type.sync="CONTEST_TYPE_REVERSE[contest.auth]['color']"
+                    :type.sync="CONTEST_TYPE_REVERSE[contest.user]['color']"
                     effect="plain"
                 >
-                  {{ $t('m.' + CONTEST_TYPE_REVERSE[contest.auth]['name']) }}
+                  {{ $t('m.' + CONTEST_TYPE_REVERSE[contest.user]['name']) }}
                 </el-tag>
               </el-tooltip>
             </el-col>
@@ -269,6 +269,7 @@ export default {
     };
   },
   created() {
+    console.log("in");
     this.contestID = this.$route.params.contestID;
     this.route_name = this.$route.name;
     // this.route_name = 'ContestProblemList';
@@ -346,10 +347,10 @@ export default {
       }
     },
     checkPassword() {
-      if (this.contestPassword === '') {
-        myMessage.warning(this.$i18n.t('m.Enter_the_contest_password'));
-        return;
-      }
+      // if (this.contestPassword === '') {
+      //   myMessage.warning(this.$i18n.t('m.Enter_the_contest_password'));
+      //   return;
+      // }
       this.btnLoading = true;
       api.registerContest(this.contestID + '', this.contestPassword).then(
           (res) => {
