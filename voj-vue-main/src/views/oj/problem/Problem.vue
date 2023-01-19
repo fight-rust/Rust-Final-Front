@@ -25,7 +25,7 @@
                       $t('m.Contest_Problem')
                     }}</el-tag></span
                   >
-                  <div
+                  <!-- <div
                       v-else-if="problemData.tags.length > 0"
                       class="problem-tag"
                   >
@@ -63,7 +63,7 @@
                         $t('m.No_tag')
                       }}
                     </el-tag>
-                  </div>
+                  </div> -->
                   <div class="problem-menu">
                     <span v-if="!contestID">
                       <el-link
@@ -165,13 +165,13 @@
                 </div>
 
                 <div id="problem-content">
-                  <template v-if="problemData.problem.description">
+                  <template v-if="problemData.problem.content">
                     <p class="title">{{ $t('m.Description') }}</p>
                     <p
                         v-highlight
                         v-katex
                         class="content markdown-body"
-                        v-html="problemData.problem.description"
+                        v-html="problemData.problem.content"
                     ></p>
                   </template>
 
@@ -195,17 +195,14 @@
                     ></p>
                   </template>
 
-                  <template v-if="problemData.problem.examples">
-                    <div
-                        v-for="(example, index) of problemData.problem.examples"
-                        :key="index"
-                    >
+                  <template v-if="problemData.problem.example">
+                    <div>
                       <div class="flex-container example">
                         <div class="example-input">
                           <p class="title">
-                            {{ $t('m.Sample_Input') }} {{ index + 1 }}
+                            {{ $t('m.Sample_Input') }}
                             <a
-                                v-clipboard:copy="example.input"
+                                v-clipboard:copy="problemData.problem.example"
                                 v-clipboard:error="onCopyError"
                                 v-clipboard:success="onCopy"
                                 class="copy"
@@ -213,9 +210,9 @@
                               <i class="el-icon-document-copy"></i>
                             </a>
                           </p>
-                          <pre>{{ example.input }}</pre>
+                          <pre>{{ problemData.problem.example }}</pre>
                         </div>
-                        <div class="example-output">
+                        <!-- <div class="example-output">
                           <p class="title">
                             {{ $t('m.Sample_Output') }} {{ index + 1 }}
                             <a
@@ -228,7 +225,7 @@
                             </a>
                           </p>
                           <pre>{{ example.output }}</pre>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </template>
@@ -843,21 +840,21 @@ export default {
           ? 'getContestSubmissionList'
           : 'getSubmissionList';
       this.loadingTable = true;
-      api[func](this.mySubmission_limit, utils.filterEmptyValue(params))
-          .then(
-              (res) => {
-                let data = res.data.data;
-                this.mySubmissions = data.records;
-                this.mySubmission_total = data.total;
-                this.loadingTable = false;
-              },
-              (err) => {
-                this.loadingTable = false;
-              }
-          )
-          .catch(() => {
-            this.loadingTable = false;
-          });
+      // api[func](this.mySubmission_limit, utils.filterEmptyValue(params))
+      //     .then(
+      //         (res) => {
+      //           let data = res.data.data;
+      //           this.mySubmissions = data.records;
+      //           this.mySubmission_total = data.total;
+      //           this.loadingTable = false;
+      //         },
+      //         (err) => {
+      //           this.loadingTable = false;
+      //         }
+      //     )
+      //     .catch(() => {
+      //       this.loadingTable = false;
+      //     });
     },
     getStatusColor(status) {
       return 'el-tag el-tag--medium status-' + JUDGE_STATUS[status].color;
@@ -975,52 +972,58 @@ export default {
       this.toResetWatch = false;
     },
     init() {
+      console.log("problem");
       this.vertical = storage.get("vertical") || false
       this.setDisplayStyle()
       if (this.$route.params.contestID) {
         this.contestID = this.$route.params.contestID;
       }
       this.problemID = this.$route.params.problemID;
+      console.log("id",this.problemID);
       if (this.$route.params.trainingID) {
         this.trainingID = this.$route.params.trainingID;
       }
-      let func =
-          this.$route.name === 'ContestProblemDetails'
-              ? 'getContestProblem'
-              : 'getProblem';
+      let func ='getProblem';
+          // this.$route.name === 'ContestProblemDetails'
+          //     ? 'getContestProblem'
+          //     : 'getProblem';
       this.loading = true;
-      api[func](this.problemID, this.contestID).then(
+      console.log("test");
+      api.getProblem(this.problemID).then(
           (res) => {
-            let result = res.data.data;
+            console.log("success");
+            console.log("Res",res);
+            let result={};
+            result.problem = res.data;
             this.changeDomTitle({title: result.problem.title});
             result['myStatus'] = -10; // 设置默认值
 
-            result.problem.examples = utils.stringToExamples(
-                result.problem.examples
-            );
-            if (result.problem.description) {
-              result.problem.description = this.$markDown.render(
-                  result.problem.description.toString()
-              );
-            }
-            if (result.problem.input) {
-              result.problem.input = this.$markDown.render(
-                  result.problem.input.toString()
-              );
-            }
-            if (result.problem.output) {
-              result.problem.output = this.$markDown.render(
-                  result.problem.output.toString()
-              );
-            }
-            if (result.problem.hint) {
-              result.problem.hint = this.$markDown.render(
-                  result.problem.hint.toString()
-              );
-            }
-            if (result.problem.userExtraFile) {
-              this.userExtraFile = JSON.parse(result.problem.userExtraFile);
-            }
+            // result.problem.examples = utils.stringToExamples(
+            //     result.problem.examples
+            // );
+            // if (result.problem.description) {
+            //   result.problem.description = this.$markDown.render(
+            //       result.problem.description.toString()
+            //   );
+            // }
+            // if (result.problem.input) {
+            //   result.problem.input = this.$markDown.render(
+            //       result.problem.input.toString()
+            //   );
+            // }
+            // if (result.problem.output) {
+            //   result.problem.output = this.$markDown.render(
+            //       result.problem.output.toString()
+            //   );
+            // }
+            // if (result.problem.hint) {
+            //   result.problem.hint = this.$markDown.render(
+            //       result.problem.hint.toString()
+            //   );
+            // }
+            // if (result.problem.userExtraFile) {
+            //   this.userExtraFile = JSON.parse(result.problem.userExtraFile);
+            // }
 
             this.problemData = result;
 
@@ -1029,8 +1032,7 @@ export default {
             if (this.isAuthenticated) {
               let pidList = [result.problem.id];
               let isContestProblemList = this.contestID ? true : false;
-              api
-                  .getUserProblemStatus(
+              api.getUserProblemStatus(
                       pidList,
                       isContestProblemList,
                       this.contestID
@@ -1051,17 +1053,17 @@ export default {
             this.changePie(result.problemCount);
 
             // 在beforeRouteEnter中修改了, 说明本地有code，无需加载template
-            if (this.code !== '') {
-              return;
-            }
-            if (this.problemData.languages.length != 0) {
-              if (
-                  !this.language ||
-                  this.problemData.languages.indexOf(this.language) == -1
-              ) {
-                this.language = this.problemData.languages[0];
-              }
-            }
+            // if (this.code !== '') {
+            //   return;
+            // }
+            // if (this.problemData.languages.length != 0) {
+            //   if (
+            //       !this.language ||
+            //       this.problemData.languages.indexOf(this.language) == -1
+            //   ) {
+            //     this.language = this.problemData.languages[0];
+            //   }
+            // }
             // try to load problem template
             let codeTemplate = this.problemData.codeTemplate;
             if (codeTemplate && codeTemplate[this.language]) {
@@ -1072,6 +1074,7 @@ export default {
             });
           },
           (err) => {
+            console.log("fail");
             this.loading = false;
           }
       );
@@ -1080,11 +1083,11 @@ export default {
       let total = problemData.total;
       let acNum = problemData.ac;
       // 该状态结果数为0的不显示,同时一些无关参数也排除
-      for (let k in problemData) {
-        if (problemData[k] == 0 || filtedStatus.indexOf(k) === -1) {
-          delete problemData[k];
-        }
-      }
+      // for (let k in problemData) {
+      //   if (problemData[k] == 0 || filtedStatus.indexOf(k) === -1) {
+      //     delete problemData[k];
+      //   }
+      // }
 
       let data = [
         {name: 'WA', value: total - acNum},
@@ -1443,11 +1446,11 @@ export default {
       }
     },
     isCFProblem() {
-      if (this.problemID.indexOf('CF-') == 0) {
-        return true;
-      } else {
-        return false;
-      }
+      // if (this.problemID.indexOf('CF-') == 0) {
+      //   return true;
+      // } else {
+      //   return false;
+      // }
     },
   },
   beforeRouteLeave(to, from, next) {

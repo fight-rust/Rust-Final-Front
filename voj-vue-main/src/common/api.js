@@ -222,11 +222,10 @@ const ojApi = {
 
   // Problem详情页的相关请求
   getProblem(problemId) {
-    return ajax('/api/get-problem', 'get', {
-      params: {
-        problemId
-      }
-    })
+    // console.log("getProblem");
+    let x = '/api/problems/'+problemId;
+    console.log(x);
+    return ajax(x, 'get')
   },
 
   // 获取题目代码模板
