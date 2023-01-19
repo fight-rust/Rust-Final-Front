@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="18">
-    <el-col :lg="18" :md="18" :sm="24">
+    <el-col>
       <el-card shadow>
         <div slot="header">
           <el-row :gutter="20" style="margin-bottom: 0.5em;">
@@ -270,84 +270,6 @@
           @on-change="pushRouter"
           @on-page-size-change="onPageSizeChange"
       ></Pagination>
-    </el-col>
-
-    <el-col :lg="6" :md="6" :sm="24">
-      <!--      <el-card style="text-align:center">-->
-      <!--        <span class="panel-title">{{ currentProblemTitle }}</span>-->
-      <!--        <el-row v-for="(record, index) in problemRecord" :key="index">-->
-      <!--          <el-col :xs="5" :sm="4" :md="6" :lg="4" style="margin-top: 10px;">-->
-      <!--            <el-tag-->
-      <!--              effect="dark"-->
-      <!--              size="small"-->
-      <!--              :color="JUDGE_STATUS[record.status].rgb"-->
-      <!--              >{{ JUDGE_STATUS[record.status].short }}</el-tag-->
-      <!--            >-->
-      <!--          </el-col>-->
-      <!--          <el-col :xs="19" :sm="20" :md="18" :lg="20">-->
-      <!--            <el-progress-->
-      <!--              :text-inside="true"-->
-      <!--              :stroke-width="20"-->
-      <!--              :percentage="record.count"-->
-      <!--              :color="JUDGE_STATUS[record.status].rgb"-->
-      <!--            ></el-progress>-->
-      <!--          </el-col>-->
-      <!--        </el-row>-->
-      <!--      </el-card>-->
-      <el-card :padding="10" style="margin-top:0px">
-        <div slot="header" style="text-align: center;">
-          <span class="taglist-title">{{ OJName + ' ' + $t('m.Tags') }}</span>
-          <div style="margin: 10px 0;">
-            <el-input
-                v-model="searchTag"
-                :placeholder="$t('m.Search_Filter_Tag')"
-                clearable
-                prefix-icon="el-icon-search"
-                size="medium"
-                @input="filterSearchTag"
-                @keyup.enter.native="filterSearchTag"
-            >
-            </el-input>
-          </div>
-        </div>
-        <template v-if="searchTagClassificationList.length > 0" v-loading="loadings.tag">
-          <el-row :gutter="10" v-for="(item,index) in secondClassificationTemp"
-                  :key="index">
-            <el-col  v-for="(tagsAndClassification,i) in item" :key="i"
-                     :span="query.oj == 'All' || (secondClassificationTemp.length==index+1 && item.length == i+1 && i%2 ==0)
-              ?24:12">
-              <el-collapse v-model="activeTagClassificationIdList" style="margin-top:10px">
-                <el-collapse-item :title="getTagClassificationName(tagsAndClassification.classification)"
-                                  v-if="tagsAndClassification.classification != null
-                        || tagsAndClassification.tagList.length > 0 "
-                                  :name="tagsAndClassification.classification == null?-1:tagsAndClassification.classification.id">
-                  <el-button
-                      v-for="tag in tagsAndClassification.tagList"
-                      :key="tag.id"
-                      @click="addTag(tag)"
-                      type="ghost"
-                      size="mini"
-                      class="tag-btn"
-                      :style="
-                        'color:#FFF;background-color:' +
-                          (tag.color ? tag.color : '#409eff')
-                      "
-                  >{{ tag.name }}
-                  </el-button>
-                </el-collapse-item>
-              </el-collapse>
-            </el-col>
-          </el-row>
-          <el-button id="pick-one" long @click="pickone">
-            <i class="fa fa-random"></i>
-            {{ $t('m.Pick_a_random_question') }}
-          </el-button>
-        </template>
-        <template v-else
-        >
-          <el-empty :description="$t('m.No_Data')"></el-empty>
-        </template>
-      </el-card>
     </el-col>
   </el-row>
 </template>

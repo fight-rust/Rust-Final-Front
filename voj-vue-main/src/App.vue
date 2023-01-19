@@ -62,19 +62,6 @@
         <!--          </el-row>-->
         <!--        </div>-->
         <div class="mundb-footer">
-          <a
-              :href="websiteConfig.recordUrl"
-              style="color:#1E9FFF"
-              target="_blank"
-          >{{ websiteConfig.recordName }}</a
-          >
-          <!--          Powered by-->
-          <!--          <a-->
-          <!--            :href="websiteConfig.projectUrl"-->
-          <!--            style="color:#1E9FFF"-->
-          <!--            target="_blank"-->
-          <!--            >{{ websiteConfig.projectName }}</a-->
-          <!--          >-->
           <span style="margin-left:10px">
             <el-dropdown placement="top" @command="changeLanguage">
               <span class="el-dropdown-link">

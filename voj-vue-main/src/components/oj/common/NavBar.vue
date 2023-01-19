@@ -8,13 +8,15 @@
           router
           text-color="#495060"
       >
-        <div class="logo">
-          <el-image
-              :src="imgUrl"
-              fit="scale-down"
-              style="width: 139px; height: 50px"
-          ></el-image>
-        </div>
+
+<!--        <div class="logo">-->
+<!--          <el-image-->
+<!--              :src="imgUrl"-->
+<!--              fit="scale-down"-->
+<!--              style="width: 139px; height: 50px"-->
+<!--          ></el-image>-->
+<!--        </div>-->
+
         <el-menu-item index="/home"
         ><i class="el-icon-s-home"></i>{{ $t('m.NavBar_Home') }}
         </el-menu-item
@@ -24,9 +26,14 @@
         >{{ $t('m.NavBar_Problem') }}
         </el-menu-item
         >
-        <el-menu-item index="/training" v-if="websiteConfig.training"
-        ><i class="el-icon-s-claim"></i
-        >{{ $t('m.NavBar_Training') }}
+<!--        <el-menu-item index="/training" v-if="websiteConfig.training"-->
+<!--        ><i class="el-icon-s-claim"></i-->
+<!--        >{{ $t('m.NavBar_Training') }}-->
+<!--        </el-menu-item-->
+<!--        >-->
+        <el-menu-item index="/status" v-if="websiteConfig.status"
+        ><i class="el-icon-s-marketing"></i
+        >{{ $t('m.NavBar_Status') }}
         </el-menu-item
         >
         <el-menu-item index="/contest" v-if="websiteConfig.contest"
@@ -34,49 +41,12 @@
         >{{ $t('m.NavBar_Contest') }}
         </el-menu-item
         >
-        <el-menu-item index="/status" v-if="websiteConfig.status"
-        ><i class="el-icon-s-marketing"></i
-        >{{ $t('m.NavBar_Status') }}
+
+        <el-menu-item index="/acm-rank" v-if="websiteConfig.rank"
+        ><i class="el-icon-s-data"></i
+        >{{ $t('m.NavBar_Rank') }}
         </el-menu-item
         >
-        <el-submenu index="rank" v-if="websiteConfig.rank">
-          <template slot="title"
-          ><i class="el-icon-s-data"></i>{{ $t('m.NavBar_Rank') }}
-          </template
-          >
-          <el-menu-item index="/acm-rank">{{
-              $t('m.NavBar_ACM_Rank')
-            }}
-          </el-menu-item>
-          <el-menu-item index="/oi-rank">{{
-              $t('m.NavBar_OI_Rank')
-            }}
-          </el-menu-item>
-        </el-submenu>
-
-        <el-menu-item index="/discussion" v-if="websiteConfig.discussion"
-        ><i class="el-icon-s-comment"></i
-        >{{ $t('m.NavBar_Discussion') }}
-        </el-menu-item
-        >
-
-        <el-menu-item index="/introduction" v-if="websiteConfig.introduction">
-          <i class="el-icon-info"></i>
-          {{ $t('m.NavBar_About') }}
-        </el-menu-item>
-
-        <!--        <el-submenu index="about">-->
-        <!--          <template slot="title"-->
-        <!--            ><i class="el-icon-info"></i>{{ $t('m.NavBar_About') }}</template-->
-        <!--          >-->
-        <!--          <el-menu-item index="/introduction">{{-->
-        <!--            $t('m.NavBar_Introduction')-->
-        <!--          }}</el-menu-item>-->
-        <!--          <el-menu-item index="/developer">{{-->
-        <!--            $t('m.NavBar_Developer')-->
-        <!--          }}</el-menu-item>-->
-        <!--        </el-submenu>-->
-
         <template v-if="!$store.getters.isLoginValue">
           <div class="btn-menu">
             <el-button round type="primary" @click="handleBtnClick('Login')"
@@ -556,7 +526,7 @@ export default {
       openusermenu: false,
       openmsgmenu: false,
       openSideMenu: '',
-      imgUrl: require('@/assets/logo.png'),
+      imgUrl: require('@/assets/zhongshanLOGO.png'),
 
       avatarStyle:
           'display: inline-flex;width: 30px;height: 30px;border-radius: 50%;align-items: center;justify-content: center;text-align: center;user-select: none;',
