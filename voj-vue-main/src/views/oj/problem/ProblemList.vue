@@ -63,7 +63,7 @@
             </el-col>
           </el-row>
 
-          <section>
+          <!-- <section>
             <b class="problem-filter">{{ $t('m.Problem_Bank') }}</b>
             <div>
               <el-tag
@@ -124,7 +124,7 @@
               </el-tag
               >
             </div>
-          </section>
+          </section> -->
           <template v-if="filterTagList.length > 0 && buildFilterTagList">
             <el-row>
               <b class="problem-filter">{{ $t('m.Tags') }}</b>
@@ -182,10 +182,16 @@
               field="problemId"
               show-overflow
               width="150"
-          ></vxe-table-column>
+          >
+          <template v-slot="{ row }">
+            <a class="title-a" @click="getProblemUri(row.problemId)">{{
+                row.id
+              }}</a>
+          </template>
+        </vxe-table-column>
 
           <vxe-table-column
-              :title="$t('m.Problem')"
+              title="题目标题"
               field="title"
               min-width="150"
               show-overflow
@@ -197,7 +203,7 @@
             </template>
           </vxe-table-column>
 
-          <vxe-table-column
+          <!-- <vxe-table-column
               :title="$t('m.Level')"
               field="difficulty"
               min-width="100"
@@ -209,9 +215,9 @@
               >{{ getLevelName(row.difficulty) }}</span
               >
             </template>
-          </vxe-table-column>
+          </vxe-table-column> -->
 
-          <vxe-table-column
+          <!-- <vxe-table-column
               :title="$t('m.Tags')"
               field="tag"
               min-width="230"
@@ -235,8 +241,8 @@
               :title="$t('m.Total')"
               field="total"
               min-width="80"
-          ></vxe-table-column>
-          <vxe-table-column
+          ></vxe-table-column> -->
+          <!-- <vxe-table-column
               :title="$t('m.AC_Rate')"
               align="center"
               field="ac"
@@ -259,17 +265,17 @@
                 </el-tooltip>
               </span>
             </template>
-          </vxe-table-column>
+          </vxe-table-column> -->
         </vxe-table>
       </el-card>
-      <Pagination
+      <!-- <Pagination
           :current.sync="query.currentPage"
           :layout="'prev, pager, next, sizes'"
           :page-size="limit"
           :total="total"
           @on-change="pushRouter"
           @on-page-size-change="onPageSizeChange"
-      ></Pagination>
+      ></Pagination> -->
     </el-col>
 
     <el-col :lg="6" :md="6" :sm="24">
@@ -511,8 +517,9 @@ export default {
       this.loadings.table = true;
       api.getProblemList().then(
           (res) => {
-            this.total = res.data.data.total;
-            this.problemList = res.data.data.records;
+            console.log(res);
+            // this.total = res.data.data.total;
+            this.problemList = res.data;
             if (this.isAuthenticated) {
               // 如果已登录，则需要查询对当前页面题目列表中各个题目的提交情况
               let pidList = [];
