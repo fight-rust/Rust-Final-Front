@@ -96,7 +96,7 @@
               class="drop-menu"
               placement="bottom"
               trigger="click"
-              @command="handleRoute"w
+              @command="handleRoute"
           >
             <span class="el-dropdown-link">
               欢迎您，{{ $store.getters.userName }}<i class="el-icon-caret-bottom"></i>

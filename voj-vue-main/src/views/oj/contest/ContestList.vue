@@ -67,7 +67,7 @@
               </el-dropdown>
             </span>
 
-            <span>
+            <!-- <span>
               <vxe-input
                   v-model="query.keyword"
                   :placeholder="$t('m.Enter_keyword')"
@@ -76,7 +76,7 @@
                   @keyup.enter.native="filterByChange"
                   @search-click="filterByChange"
               ></vxe-input>
-            </span>
+            </span> -->
           </div>
         </div>
         <div v-loading="loading">
@@ -316,7 +316,7 @@ export default {
       this.getContestList();
     },
     getContestList() {
-      console.log("Test");
+      
       this.loading = true;
       api.getContestList().then(
           (res) => {
@@ -330,14 +330,14 @@ export default {
           }
       );
     },
-    filterByChange() {
-      let query = Object.assign({}, this.query);
-      query.currentPage = this.currentPage;
-      this.$router.push({
-        name: 'ContestList',
-        query: utils.filterEmptyValue(query),
-      });
-    },
+    // filterByChange() {
+    //   let query = Object.assign({}, this.query);
+    //   query.currentPage = this.currentPage;
+    //   this.$router.push({
+    //     name: 'ContestList',
+    //     query: utils.filterEmptyValue(query),
+    //   });
+    // },
 
     parseContestType(type) {
       if (type == 0) {
@@ -357,16 +357,18 @@ export default {
       this.filterByChange();
     },
     toContest(contest) {
-      if (!this.isAuthenticated) {
-        myMessage.warning(this.$i18n.t('m.Please_login_first'));
-        this.$store.dispatch('changeModalStatus', {visible: true});
-      } else {
+      // if (!this.isAuthenticated) {
+      //   myMessage.warning(this.$i18n.t('m.Please_login_first'));
+      //   this.$store.dispatch('changeModalStatus', {visible: true});
+      // } else {
+        console.log("Test");
         this.$router.push({
           // name: 'ContestDetails',
           name: 'ContestProblemList',
-          params: {contestID: contest.id},
+          // params: {contestID: contest.id},
+          path:"/contest/"+contest.id
         });
-      }
+      // }
     },
     toContestOutsideScoreBoard(cid, type) {
       if (type == 0) {

@@ -212,8 +212,7 @@ export default {
               for (let index = 0; index < this.problems.length; index++) {
                 pidList.push(this.problems[index].pid);
               }
-              api
-                  .getUserProblemStatus(
+              api.getUserProblemStatus(
                       pidList,
                       isContestProblemList,
                       this.$route.params.contestID

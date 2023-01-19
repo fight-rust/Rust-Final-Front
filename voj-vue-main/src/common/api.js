@@ -201,18 +201,8 @@ const ojApi = {
       }
     })
   },
-  getProblemList(limit, searchParams) {
-    let params = {
-      limit
-    }
-    Object.keys(searchParams).forEach((element) => {
-      if (searchParams[element] !== '' && searchParams[element] !== null && searchParams[element] !== undefined) {
-        params[element] = searchParams[element]
-      }
-    })
-    return ajax('/api/get-problem-list', 'get', {
-      params: params
-    })
+  getProblemList() {
+    return ajax('/api/problems', 'get')
   },
 
   // 查询当前登录用户对题目的提交状态

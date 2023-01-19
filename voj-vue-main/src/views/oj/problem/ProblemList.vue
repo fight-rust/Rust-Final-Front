@@ -273,27 +273,6 @@
     </el-col>
 
     <el-col :lg="6" :md="6" :sm="24">
-      <!--      <el-card style="text-align:center">-->
-      <!--        <span class="panel-title">{{ currentProblemTitle }}</span>-->
-      <!--        <el-row v-for="(record, index) in problemRecord" :key="index">-->
-      <!--          <el-col :xs="5" :sm="4" :md="6" :lg="4" style="margin-top: 10px;">-->
-      <!--            <el-tag-->
-      <!--              effect="dark"-->
-      <!--              size="small"-->
-      <!--              :color="JUDGE_STATUS[record.status].rgb"-->
-      <!--              >{{ JUDGE_STATUS[record.status].short }}</el-tag-->
-      <!--            >-->
-      <!--          </el-col>-->
-      <!--          <el-col :xs="19" :sm="20" :md="18" :lg="20">-->
-      <!--            <el-progress-->
-      <!--              :text-inside="true"-->
-      <!--              :stroke-width="20"-->
-      <!--              :percentage="record.count"-->
-      <!--              :color="JUDGE_STATUS[record.status].rgb"-->
-      <!--            ></el-progress>-->
-      <!--          </el-col>-->
-      <!--        </el-row>-->
-      <!--      </el-card>-->
       <el-card :padding="10" style="margin-top:0px">
         <div slot="header" style="text-align: center;">
           <span class="taglist-title">{{ OJName + ' ' + $t('m.Tags') }}</span>
@@ -530,7 +509,7 @@ export default {
       }
       queryParams.tagId = queryParams.tagId + '';
       this.loadings.table = true;
-      api.getProblemList(this.limit, queryParams).then(
+      api.getProblemList().then(
           (res) => {
             this.total = res.data.data.total;
             this.problemList = res.data.data.records;

@@ -294,37 +294,37 @@ export default {
         }, 1000);
 
         // 每分钟获取一次是否存在未阅读的公告
-        this.announceTimer = setInterval(() => {
-          let key = buildContestAnnounceKey(this.userInfo.uid, this.contestID);
-          let readAnnouncementList = storage.get(key) || [];
-          let data = {
-            cid: this.contestID,
-            readAnnouncementList: readAnnouncementList,
-          };
+        // this.announceTimer = setInterval(() => {
+        //   let key = buildContestAnnounceKey(this.userInfo.uid, this.contestID);
+        //  let readAnnouncementList = storage.get(key) || [];
+        //   let data = {
+        //     cid: this.contestID,
+        //     readAnnouncementList: readAnnouncementList,
+        //   };
 
-          api.getContestUserNotReadAnnouncement(data).then((res) => {
-            let newAnnounceList = res.data.data;
-            for (let i = 0; i < newAnnounceList.length; i++) {
-              readAnnouncementList.push(newAnnounceList[i].id);
-              this.$notify({
-                title: newAnnounceList[i].title,
-                message:
-                    '<p style="text-align:center;"><i class="el-icon-time"> ' +
-                    time.utcToLocal(newAnnounceList[i].gmtCreate) +
-                    '</i></p>' +
-                    '<p style="text-align:center;color:#409eff">' +
-                    this.$i18n.t(
-                        'm.Please_check_the_contest_announcement_for_details'
-                    ) +
-                    '</p>',
-                type: 'warning',
-                dangerouslyUseHTMLString: true,
-                duration: 0,
-              });
-            }
-            storage.set(key, readAnnouncementList);
-          });
-        }, 60 * 1000);
+        //   api.getContestUserNotReadAnnouncement(data).then((res) => {
+        //     let newAnnounceList = res.data.data;
+        //     for (let i = 0; i < newAnnounceList.length; i++) {
+        //       readAnnouncementList.push(newAnnounceList[i].id);
+        //       this.$notify({
+        //         title: newAnnounceList[i].title,
+        //         message:
+        //             '<p style="text-align:center;"><i class="el-icon-time"> ' +
+        //             time.utcToLocal(newAnnounceList[i].gmtCreate) +
+        //             '</i></p>' +
+        //             '<p style="text-align:center;color:#409eff">' +
+        //             this.$i18n.t(
+        //                 'm.Please_check_the_contest_announcement_for_details'
+        //             ) +
+        //             '</p>',
+        //         type: 'warning',
+        //         dangerouslyUseHTMLString: true,
+        //         duration: 0,
+        //       });
+        //     }
+        //     storage.set(key, readAnnouncementList);
+        //   });
+        // }, 60 * 1000); 
       }
 
       this.$nextTick((_) => {
