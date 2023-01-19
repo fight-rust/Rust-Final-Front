@@ -356,16 +356,16 @@ export default {
       this.filterByChange();
     },
     toContest(contest) {
-      // if (!this.isAuthenticated) {
-      //   myMessage.warning(this.$i18n.t('m.Please_login_first'));
-      //   this.$store.dispatch('changeModalStatus', {visible: true});
-      // } else {
+      if (this.$store.getters.userName==='username') {
+        myMessage.warning(this.$i18n.t('m.Please_login_first'));
+        this.$store.dispatch('changeModalStatus', {visible: true});
+      } else {
         console.log("Test");
         this.$router.push({
           name: 'ContestProblemList',
           params: {contestID: contest.id},
         });
-      // }
+      }
     },
     toContestOutsideScoreBoard(cid, type) {
       if (type == 0) {

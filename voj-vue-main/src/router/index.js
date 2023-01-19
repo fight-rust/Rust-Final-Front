@@ -42,24 +42,25 @@ const router = new VueRouter({
  */
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  if (to.matched.some(record => record.meta.requireAuth)) { // 判断该路由是否需要登录权限
-    const token = localStorage.getItem('token') || ''
-    const isSuperAdmin = store.getters.isSuperAdmin
-    const isAdmin = store.getters.isAdminRole
-    if (token) { // 判断当前的token是否存在 登录存入的token
-      if (to.matched.some(record => record.meta.requireSuperAdmin)) { // 判断是否需要超级管理权限
-        checkRole(isSuperAdmin);
-      } else if (to.matched.some(record => record.meta.requireAdmin)) { //判断是否需要管理员权限
-        checkRole(isAdmin);
-      } else {
-        next()
-      }
-    } else { // 如果没有token
-      redirectToLoginPage();
-    }
-  } else { // 不需要认证的页面
-    next()
-  }
+  // if (to.matched.some(record => record.meta.requireAuth)) { // 判断该路由是否需要登录权限
+  //   const token = localStorage.getItem('token') || ''
+  //   const isSuperAdmin = store.getters.isSuperAdmin
+  //   const isAdmin = store.getters.isAdminRole
+  //   if (token) { // 判断当前的token是否存在 登录存入的token
+  //     if (to.matched.some(record => record.meta.requireSuperAdmin)) { // 判断是否需要超级管理权限
+  //       checkRole(isSuperAdmin);
+  //     } else if (to.matched.some(record => record.meta.requireAdmin)) { //判断是否需要管理员权限
+  //       checkRole(isAdmin);
+  //     } else {
+  //       next()
+  //     }
+  //   } else { // 如果没有token
+  //     redirectToLoginPage();
+  //   }
+  // } else { // 不需要认证的页面
+  //   next()
+  // }
+  next()
 
   function checkRole(role) {
     if (role) { // 拥有权限就进入

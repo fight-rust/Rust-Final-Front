@@ -172,6 +172,8 @@ const ojApi = {
     })
   },
   logout() {
+    store.commit('changeModalStatus', {mode: 'Login', visible: true})
+    store.commit('changeisLogin',false)
     return ajax('/api/logout', 'get')
   },
 
