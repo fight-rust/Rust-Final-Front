@@ -290,6 +290,7 @@ export default {
         name: 'ProblemDetails',
         params: {
           problemID: problemId,
+          contestID:this.contest.id,
         },
       });
     },

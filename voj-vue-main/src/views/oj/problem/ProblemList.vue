@@ -520,32 +520,31 @@ export default {
             console.log(res);
             // this.total = res.data.data.total;
             this.problemList = res.data;
-            if (this.isAuthenticated) {
-              // 如果已登录，则需要查询对当前页面题目列表中各个题目的提交情况
-              let pidList = [];
-              for (let index = 0; index < this.problemList.length; index++) {
-                pidList.push(this.problemList[index].pid);
-              }
-              if (pidList.length > 0) {
-                // 必须当前页有显示题目才发送查询请求
-                this.isGetStatusOk = false;
-                let isContestProblemList = false; // 为了与比赛题目区分
-                api
-                    .getUserProblemStatus(pidList, isContestProblemList)
-                    .then((res) => {
-                      let result = res.data.data;
-                      for (
-                          let index = 0;
-                          index < this.problemList.length;
-                          index++
-                      ) {
-                        this.problemList[index]['myStatus'] =
-                            result[this.problemList[index].pid].status;
-                      }
-                      this.isGetStatusOk = true;
-                    });
-              }
-            }
+            // if (this.isAuthenticated) {
+            //   // 如果已登录，则需要查询对当前页面题目列表中各个题目的提交情况
+            //   let pidList = [];
+            //   for (let index = 0; index < this.problemList.length; index++) {
+            //     pidList.push(this.problemList[index].pid);
+            //   }
+            //   if (pidList.length > 0) {
+            //     // 必须当前页有显示题目才发送查询请求
+            //     this.isGetStatusOk = false;
+            //     let isContestProblemList = false; // 为了与比赛题目区分
+            //     api.getUserProblemStatus(pidList, isContestProblemList)
+            //         .then((res) => {
+            //           let result = res.data.data;
+            //           for (
+            //               let index = 0;
+            //               index < this.problemList.length;
+            //               index++
+            //           ) {
+            //             this.problemList[index]['myStatus'] =
+            //                 result[this.problemList[index].pid].status;
+            //           }
+            //           this.isGetStatusOk = true;
+            //         });
+            //   }
+            // }
             this.loadings.table = false;
           },
           (res) => {
@@ -661,7 +660,10 @@ export default {
         myMessage.success(this.$i18n.t('m.Good_luck_to_you'));
         this.$router.push({
           name: 'ProblemDetails',
-          params: {problemID: res.data.data.problemId},
+          params: {
+            problemID: res.data.data.problemId,
+            contestID:0,
+          },
         });
       });
     },
