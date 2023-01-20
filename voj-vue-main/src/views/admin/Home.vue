@@ -5,6 +5,7 @@
           :default-active="currentPath"
           :router="true"
           class="vertical_menu"
+          :default-openeds="openeds"
       >
         <div class="logo">
           <img :src="imgUrl" alt="oj admin"/>
@@ -14,32 +15,7 @@
           >{{ $t('m.Dashboard') }}
         </el-menu-item>
         <!-- <el-submenu v-if="isSuperAdmin" index="general"> -->
-        <el-submenu v-if="isSuperAdmin" index="general">
-          <template slot="title"
-          ><i class="el-icon-menu"></i>{{ $t('m.General') }}
-          </template
-          >
-          <el-menu-item index="/admin/user">{{
-              $t('m.User_Admin')
-            }}
-          </el-menu-item>
-          <el-menu-item index="/admin/announcement">{{
-              $t('m.Announcement_Admin')
-            }}
-          </el-menu-item>
-          <el-menu-item index="/admin/notice">{{
-              $t('m.SysNotice')
-            }}
-          </el-menu-item>
-          <el-menu-item index="/admin/conf">{{
-              $t('m.System_Config')
-            }}
-          </el-menu-item>
-          <el-menu-item index="/admin/switch">{{
-              $t('m.System_Switch')
-            }}
-          </el-menu-item>
-        </el-submenu>
+
         <!-- <el-submenu index="problem" v-if="hasProblemPermission"> -->
         <el-submenu index="problem">
           <template slot="title"
@@ -526,6 +502,7 @@ export default {
   data() {
     return {
       openusermenu: false,
+      openeds:["problem","contest"],
       openSideMenu: '',
       // katexVisible: false,
       opendrawer: false,
