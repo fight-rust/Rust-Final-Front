@@ -355,6 +355,8 @@ export const m = {
 
   // /views/admin/contest/Contest.vue
   Contest_Title: '比赛标题',
+  Contest_pproblem: '比赛题目',
+  Contest_pproblemplaceholder: '输入题目id，相邻id用分号;隔开，如:1;2;3。',
   Contest_Description: '比赛描述',
   Start_Time: '开始时间',
   Contest_End_Time: '结束时间',

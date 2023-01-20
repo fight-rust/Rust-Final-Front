@@ -3,18 +3,7 @@
     <el-card>
       <div slot="header">
         <span class="panel-title home-title">{{ $t('m.Contest_List') }}</span>
-        <div class="filter-row">
-          <span>
-            <vxe-input
-                v-model="keyword"
-                :placeholder="$t('m.Enter_keyword')"
-                size="medium"
-                type="search"
-                @search-click="filterByKeyword"
-                @keyup.enter.native="filterByKeyword"
-            ></vxe-input>
-          </span>
-        </div>
+
       </div>
       <vxe-table
           ref="xTable"
@@ -24,152 +13,14 @@
           auto-resize
           stripe
       >
-        <vxe-table-column field="id" title="ID" width="80"></vxe-table-column>
+        <vxe-table-column field="cid" title="比赛ID" width="80"></vxe-table-column>
         <vxe-table-column
             :title="$t('m.Title')"
-            field="title"
+            field="ctitle"
             min-width="150"
-            show-overflow
         >
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Type')" width="100">
-          <template v-slot="{ row }">
-            <el-tag type="gray">{{ row.type | parseContestType }}</el-tag>
-          </template>
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Auth')" width="100">
-          <template v-slot="{ row }">
-            <el-tooltip
-                :content="$t('m.' + CONTEST_TYPE_REVERSE[row.auth].tips)"
-                effect="light"
-                placement="top"
-            >
-              <el-tag
-                  :type="CONTEST_TYPE_REVERSE[row.auth].color"
-                  effect="plain"
-              >
-                {{ CONTEST_TYPE_REVERSE[row.auth].name }}
-              </el-tag>
-            </el-tooltip>
-          </template>
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Status')" width="100">
-          <template v-slot="{ row }">
-            <el-tag
-                :color="CONTEST_STATUS_REVERSE[row.status].color"
-                effect="dark"
-                size="medium"
-            >
-              {{ CONTEST_STATUS_REVERSE[row.status].name }}
-            </el-tag>
-          </template>
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Visible')" min-width="80">
-          <template v-slot="{ row }">
-            <el-switch
-                v-model="row.visible"
-                :disabled="!isSuperAdmin && userInfo.uid != row.uid"
-                @change="changeContestVisible(row.id, row.visible, row.uid)"
-            >
-            </el-switch>
-          </template>
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Info')" min-width="210">
-          <template v-slot="{ row }">
-            <p>Start Time: {{ row.startTime | localtime }}</p>
-            <p>End Time: {{ row.endTime | localtime }}</p>
-            <p>Created Time: {{ row.gmtCreate | localtime }}</p>
-            <p>Creator: {{ row.author }}</p>
-          </template>
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Option')" min-width="150">
-          <template v-slot="{ row }">
-            <template v-if="isSuperAdmin || userInfo.uid == row.uid">
-              <div style="margin-bottom:10px">
-                <el-tooltip
-                    :content="$t('m.Edit')"
-                    effect="dark"
-                    placement="top"
-                >
-                  <el-button
-                      icon="el-icon-edit"
-                      size="mini"
-                      type="primary"
-                      @click.native="goEdit(row.id)"
-                  >
-                  </el-button>
-                </el-tooltip>
-                <el-tooltip
-                    :content="$t('m.View_Contest_Problem_List')"
-                    effect="dark"
-                    placement="top"
-                >
-                  <el-button
-                      icon="el-icon-tickets"
-                      size="mini"
-                      type="success"
-                      @click.native="goContestProblemList(row.id)"
-                  >
-                  </el-button>
-                </el-tooltip>
-              </div>
-              <div style="margin-bottom:10px">
-                <el-tooltip
-                    :content="$t('m.View_Contest_Announcement_List')"
-                    effect="dark"
-                    placement="top"
-                >
-                  <el-button
-                      icon="el-icon-info"
-                      size="mini"
-                      type="info"
-                      @click.native="goContestAnnouncement(row.id)"
-                  >
-                  </el-button>
-                </el-tooltip>
-
-                <el-tooltip
-                    :content="$t('m.Download_Contest_AC_Submission')"
-                    effect="dark"
-                    placement="top"
-                >
-                  <el-button
-                      icon="el-icon-download"
-                      size="mini"
-                      type="warning"
-                      @click.native="openDownloadOptions(row.id)"
-                  >
-                  </el-button>
-                </el-tooltip>
-              </div>
-            </template>
-            <el-tooltip
-                v-if="isSuperAdmin"
-                :content="$t('m.Delete')"
-                effect="dark"
-                placement="top"
-            >
-              <el-button
-                  icon="el-icon-delete"
-                  size="mini"
-                  type="danger"
-                  @click.native="deleteContest(row.id)"
-              >
-              </el-button>
-            </el-tooltip>
-          </template>
         </vxe-table-column>
       </vxe-table>
-      <div class="panel-options">
-        <el-pagination
-            :page-size="pageSize"
-            :total="total"
-            class="page"
-            layout="prev, pager, next"
-            @current-change="currentChange"
-        >
-        </el-pagination>
-      </div>
     </el-card>
     <el-dialog
         :title="$t('m.Download_Contest_AC_Submission')"
@@ -244,8 +95,10 @@ export default {
       api.admin_getContestList(page, this.pageSize, this.keyword).then(
           (res) => {
             this.loading = false;
-            this.total = res.data.data.total;
-            this.contestList = res.data.data.records;
+            for(let i=0;i<res.data.cid.length;i++){
+              let temp={cid:res.data.cid[i],ctitle:res.data.ctitle[i]};
+              this.contestList.push(temp);
+            }
           },
           (res) => {
             this.loading = false;

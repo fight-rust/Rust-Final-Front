@@ -23,6 +23,7 @@
                   :placeholder="$t('m.Start_Time')"
                   type="datetime"
                   @change="changeDuration"
+                  value-format="yyyy-MM-dd HH:mm:ss"
               >
               </el-date-picker>
             </el-form-item>
@@ -34,6 +35,7 @@
                   :placeholder="$t('m.Contest_End_Time')"
                   type="datetime"
                   @change="changeDuration"
+                  value-format="yyyy-MM-dd HH:mm:ss"
               >
               </el-date-picker>
             </el-form-item>
@@ -41,6 +43,14 @@
           <el-col :md="8" :xs="24">
             <el-form-item :label="$t('m.Contest_Duration')" required>
               <el-input v-model="durationText" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item :label="$t('m.Contest_pproblem')" required>
+              <el-input
+                  v-model="contest.problem"
+                  :placeholder="$t('m.Contest_pproblemplaceholder')"
+              ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -143,27 +153,12 @@ export default {
       disableRuleType: false,
       durationText: '', // 比赛时长文本表示
       seal_rank_time: 2, // 当开启封榜模式，即实时榜单关闭时，可选择前半小时，前一小时，全程封榜,默认全程封榜
+      problemid:[],
       contest: {
         title: '',
-        description: '',
         startTime: '',
         endTime: '',
-        duration: 0,
-        type: 0, // 0 ACM赛制; 1 OI赛制
-        pwd: '',
-        sealRank: false,
-        sealRankTime: '', //封榜时间
-        autoRealRank: false,
-        auth: 0,
-        contestAdminRank: false,
-        contestAdminVisible: false,
-        openPrint: false,
-        rankShowName: 'username',
-        openPwdLimit: false,
-        openAccountLimit: false,
-        accountLimitRule: '',
-        starAccount: [],
-        oiRankScoreType: 'Highest', // Recent; Highest
+        problem:'',
       },
       formRule: {
         prefix: '',
@@ -175,6 +170,15 @@ export default {
       starUserInput: '',
       inputVisible: false,
     };
+  },
+  created() {
+    api.admin_getProblemList(this.contest).then(
+        (res) => {
+          for(let i=0;i<res.data.pid.length;i++){
+            this.problemid[i]=res.data.pid[i];
+          }
+        }
+    );
   },
   mounted() {
     if (this.$route.name === 'admin-edit-contest') {
@@ -241,18 +245,12 @@ export default {
     },
 
     saveContest() {
+      let flag=1;
       if (!this.contest.title) {
         myMessage.error(
             this.$i18n.t('m.Contest_Title') + ' ' + this.$i18n.t('m.is_required')
         );
-        return;
-      }
-      if (!this.contest.description) {
-        myMessage.error(
-            this.$i18n.t('m.Contest_Description') +
-            ' ' +
-            this.$i18n.t('m.is_required')
-        );
+        flag=0;
         return;
       }
       if (!this.contest.startTime) {
@@ -261,6 +259,7 @@ export default {
             ' ' +
             this.$i18n.t('m.is_required')
         );
+        flag=0;
         return;
       }
       if (!this.contest.endTime) {
@@ -269,70 +268,47 @@ export default {
             ' ' +
             this.$i18n.t('m.is_required')
         );
+        flag=0;
         return;
       }
-      if (!this.contest.duration || this.contest.duration <= 0) {
-        myMessage.error(this.$i18n.t('m.Contest_Duration_Check'));
-        return;
-      }
-      if (this.contest.auth != 0) {
-        if (!this.contest.openPwdLimit && !this.contest.openAccountLimit) {
-          myMessage.error(this.$i18n.t('m.Contest_Auth_Check_Tip'));
-          return;
-        }
-        if (this.contest.openPwdLimit && !this.contest.pwd) {
-          myMessage.error(
-              this.$i18n.t('m.Contest_Password') +
-              ' ' +
-              this.$i18n.t('m.is_required')
-          );
-          return;
-        }
-        if (this.contest.openAccountLimit) {
-          this.contest.accountLimitRule = this.changeAccountRuleToStr(
-              this.formRule
-          );
-        }
-      }
 
+      let temp=this.contest.problem.split(';');
+      let temp2=[];
 
-      let funcName =
-          this.$route.name === 'admin-edit-contest'
-              ? 'admin_editContest'
-              : 'admin_createContest';
-
-      switch (this.seal_rank_time) {
-        case 0: // 结束前半小时
-          this.contest.sealRankTime = moment(this.contest.endTime).subtract(
-              1800,
-              'seconds'
-          );
+      for(let i=0;i<temp.length;i++){
+        let num=parseInt(temp[i]);
+        if(isNaN(num)){
+          myMessage.error("题目输入格式有误或题目id非数字！")
+          flag=0;
           break;
-        case 1: // 结束前一小时
-          this.contest.sealRankTime = moment(this.contest.endTime).subtract(
-              3600,
-              'seconds'
-          );
+        }
+        else if(this.problemid.find(item=>item===num)===undefined){
+          myMessage.error("id对应的题目不存在！")
+          flag=0;
           break;
-        case 2: // 全程
-          this.contest.sealRankTime = moment(this.contest.startTime);
-      }
-      let data = Object.assign({}, this.contest);
-      if (funcName === 'admin_createContest') {
-        data['uid'] = this.userInfo.uid;
-        data['author'] = this.userInfo.username;
+        }
+        temp2.push(num);
       }
 
-      api[funcName](data)
-          .then((res) => {
-            myMessage.success('success');
-            this.$router.push({
-              name: 'admin-contest-list',
-              query: {refresh: 'true'},
+      let temp3={problem:temp2,startTime:this.contest.startTime,endTime:this.contest.endTime,title:this.contest.title};
+
+      if(flag===1){
+        let funcName =
+            this.$route.name === 'admin-edit-contest'
+                ? 'admin_editContest'
+                : 'admin_createContest';
+
+        api[funcName](temp3)
+            .then((res) => {
+              myMessage.success('success');
+              this.$router.push({
+                name: 'admin-contest-list',
+                query: {refresh: 'true'},
+              });
+            })
+            .catch(() => {
             });
-          })
-          .catch(() => {
-          });
+      }
     },
 
     changeDuration() {
