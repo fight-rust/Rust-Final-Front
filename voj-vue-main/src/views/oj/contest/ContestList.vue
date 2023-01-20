@@ -184,26 +184,23 @@
                         </el-tooltip>
                       </template>
                     </li>
-                    <!-- <li>
+                    <li>
                       <el-tooltip
-                          :content="
-                          $t('m.' + CONTEST_TYPE_REVERSE[contest.auth].tips)
-                        "
+                          :content=contest.user
+                        
                           effect="light"
                           placement="top"
                       >
                         <el-tag
-                            :type="CONTEST_TYPE_REVERSE[contest.auth]['color']"
+                            :type="CONTEST_TYPE_REVERSE[0]['color']"
                             effect="plain"
                         >
                           {{
-                            $t(
-                                'm.' + CONTEST_TYPE_REVERSE[contest.auth]['name']
-                            )
+                            contest.user
                           }}
                         </el-tag>
                       </el-tooltip>
-                    </li> -->
+                    </li>
                     <li v-if="contest.count != null">
                       <i
                           class="el-icon-user-solid"
@@ -238,16 +235,16 @@
                     :xs="4"
                     style="text-align: center"
                 >
-                  <!-- <el-tag
-                      :color="CONTEST_STATUS_REVERSE[0]['color']"
+                  <el-tag
+                      :color="CONTEST_STATUS_REVERSE[contest.status]['color']"
                       effect="dark"
                       size="medium"
-                  > -->
-                    <!-- <i aria-hidden="true" class="fa fa-circle"></i>
+                  >
+                    <i aria-hidden="true" class="fa fa-circle"></i>
                     {{
-                      $t('m.' + CONTEST_STATUS_REVERSE[0]['name'])
+                      $t('m.' + CONTEST_STATUS_REVERSE[contest.status]['name'])
                     }}
-                  </el-tag> -->
+                  </el-tag>
                 </el-col>
               </el-row>
             </li>
@@ -320,8 +317,16 @@ export default {
       api.getContestList().then(
           (res) => {
             console.log("success",res.data);
-            this.contests = res.data;
-            // this.total = res.data.data.total;
+            this.contests =  res.data;
+            this.contests.forEach(contest=>{
+              var start = new Date (contest.start_time);
+              var end = new Date(contest.end_time);
+              var now = new Date();
+              if(start-now>0) contest.status=-1;
+              else if(now-end>0) contest.status=1;
+              else contest.status=0;
+              
+            })
             this.loading = false;
           },
           (err) => {
