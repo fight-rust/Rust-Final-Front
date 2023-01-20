@@ -241,7 +241,7 @@ const ojApi = {
 
   // 提交评测模块
   submitCode(data) {
-    return ajax('/api/submit-problem-judge', 'post', {
+    return ajax('/api/jobs', 'post', {
       data
     })
   },

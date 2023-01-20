@@ -253,7 +253,8 @@
               <span slot="label"
               ><i class="el-icon-time"></i> {{ $t('m.My_Submission') }}</span
               >
-              <template v-if="!isAuthenticated">
+              <!-- <template v-if="!isAuthenticated"> -->
+              <template v-if="$store.getters.userName === 'username'">
                 <div style="margin:50px 0px;margin-left:-20px;">
                   <el-alert
                       :closable="false"
@@ -501,7 +502,8 @@
             ></CodeMirror> -->
             <el-row>
               <el-col :lg="10" :md="10" :sm="24" style="margin-top:4px;">
-                <div v-if="!isAuthenticated">
+                <!-- <div v-if="!isAuthenticated"> -->
+                  <div v-if="$store.getters.userName === 'username'">
                   <el-alert
                       :closable="false"
                       effect="dark"
@@ -630,8 +632,9 @@
                     <el-input v-model="captchaCode" class="captcha-code"/>
                   </div>
                 </template>
+                <!-- :disabled="problemSubmitDisabled || submitted" -->
                 <el-button
-                    :disabled="problemSubmitDisabled || submitted"
+                    :disabled="submitted"
                     :loading="submitting"
                     class="fl-right"
                     icon="el-icon-edit-outline"
@@ -1272,26 +1275,30 @@ export default {
         return;
       }
 
-      // 比赛题目需要检查是否有权限提交
-      if (!this.canSubmit && this.$route.params.contestID) {
-        this.submitPwdVisible = true;
-        return;
-      }
+      // // 比赛题目需要检查是否有权限提交
+      // if (!this.canSubmit && this.$route.params.contestID) {
+      //   this.submitPwdVisible = true;
+      //   return;
+      // }
 
       this.submissionId = '';
       this.result = {status: 9};
       this.submitting = true;
       let data = {
-        pid: this.problemID, // 如果是比赛题目就为display_id
-        language: this.language,
-        code: this.code,
-        cid: this.contestID,
-        tid: this.trainingID,
-        isRemote: this.isRemote,
+        // pid: this.problemID, // 如果是比赛题目就为display_id
+        // language: this.language,
+        // code: this.code,
+        // cid: this.contestID,
+        // tid: this.trainingID,
+        // isRemote: this.isRemote,
+        source_code:this.code,
+        user_name:this.$store.getters.userName,
+        contest_id:this.contestID,
+        problem_id:this.trainingID,
       };
-      if (this.captchaRequired) {
-        data.captcha = this.captchaCode;
-      }
+      // if (this.captchaRequired) {
+      //   data.captcha = this.captchaCode;
+      // }
       const submitFunc = (data, detailsVisible) => {
         this.statusVisible = true;
         api.submitCode(data).then(

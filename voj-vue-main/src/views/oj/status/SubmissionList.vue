@@ -493,14 +493,19 @@ export default {
       }
       if (this.formFilter.onlyMine) {
         // 需要判断是否为登陆状态
-        if (this.isAuthenticated) {
-          params.username = ''; // 如果是搜索当前用户的提交记录，那么用户名搜索应该无效
-          this.formFilter.username = '';
-        } else {
-          this.formFilter.onlyMine = false;
-          myMessage.error(this.$i18n.t('m.Please_login_first'));
-          return;
-        }
+        // if (this.isAuthenticated) {
+        //   params.username = ''; // 如果是搜索当前用户的提交记录，那么用户名搜索应该无效
+        //   this.formFilter.username = '';
+        // } else {
+          if (this.$store.getters.userName === 'username') {
+            // console.log('未登录');
+            this.formFilter.onlyMine = false;
+            myMessage.error(this.$i18n.t('m.Please_login_first'));
+            return;
+          } else {
+            params.username = ''; // 如果是搜索当前用户的提交记录，那么用户名搜索应该无效
+            this.formFilter.username = '';
+          }
       }
 
       this.loadingTable = true;
@@ -704,7 +709,8 @@ export default {
     handleOnlyMine() {
       if (this.formFilter.onlyMine) {
         // 需要判断是否为登陆状态
-        if (this.isAuthenticated) {
+        // if (this.isAuthenticated) {
+        if(this.$store.getters.userName != 'username'){
           this.formFilter.username = '';
         } else {
           this.formFilter.onlyMine = false;
