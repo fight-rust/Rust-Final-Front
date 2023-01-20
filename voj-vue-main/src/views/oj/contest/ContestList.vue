@@ -317,6 +317,7 @@ export default {
       api.getContestList().then(
           (res) => {
             console.log("success",res.data);
+
             this.contests =  res.data;
             this.contests.forEach(contest=>{
               var start = new Date (contest.start_time);
@@ -365,10 +366,14 @@ export default {
         myMessage.warning(this.$i18n.t('m.Please_login_first'));
         this.$store.dispatch('changeModalStatus', {visible: true});
       } else {
-        this.$router.push({
+        if(contest.status==0)
+        {
+          this.$router.push({
           name: 'ContestProblemList',
           params: {contestID: contest.id,contestTitle:contest.title,startTime:contest.start_time,endTime:contest.end_time},
         });
+        }
+       
       }
     },
     toContestOutsideScoreBoard(cid, type) {
