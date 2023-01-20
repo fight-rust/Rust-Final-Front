@@ -489,7 +489,7 @@
               class="submit-detail"
               shadow="always"
           >
-            <CodeMirror
+            <!-- <CodeMirror
                 :language.sync="language"
                 :languages="problemData.languages"
                 :theme.sync="theme"
@@ -498,7 +498,7 @@
                 @changeTheme="onChangeTheme"
                 @resetCode="onResetToTemplate"
                 @switchDisplayMode="switchDisplayMode"
-            ></CodeMirror>
+            ></CodeMirror> -->
             <el-row>
               <el-col :lg="10" :md="10" :sm="24" style="margin-top:4px;">
                 <div v-if="!isAuthenticated">
@@ -972,14 +972,18 @@ export default {
       this.toResetWatch = false;
     },
     init() {
-      console.log("problem");
+      
       this.vertical = storage.get("vertical") || false
       this.setDisplayStyle()
       if (this.$route.params.contestID) {
         this.contestID = this.$route.params.contestID;
+        console.log("contest",this.$route.params.contestID);
+      }
+      else{
+        this.contestID = 0;
       }
       this.problemID = this.$route.params.problemID;
-      console.log("id",this.problemID);
+      console.log("problem",this.$route.params.problemID);
       if (this.$route.params.trainingID) {
         this.trainingID = this.$route.params.trainingID;
       }
@@ -998,32 +1002,32 @@ export default {
             this.changeDomTitle({title: result.problem.title});
             result['myStatus'] = -10; // 设置默认值
 
-            // result.problem.examples = utils.stringToExamples(
-            //     result.problem.examples
-            // );
-            // if (result.problem.description) {
-            //   result.problem.description = this.$markDown.render(
-            //       result.problem.description.toString()
-            //   );
-            // }
-            // if (result.problem.input) {
-            //   result.problem.input = this.$markDown.render(
-            //       result.problem.input.toString()
-            //   );
-            // }
-            // if (result.problem.output) {
-            //   result.problem.output = this.$markDown.render(
-            //       result.problem.output.toString()
-            //   );
-            // }
-            // if (result.problem.hint) {
-            //   result.problem.hint = this.$markDown.render(
-            //       result.problem.hint.toString()
-            //   );
-            // }
-            // if (result.problem.userExtraFile) {
-            //   this.userExtraFile = JSON.parse(result.problem.userExtraFile);
-            // }
+            result.problem.examples = utils.stringToExamples(
+                result.problem.examples
+            );
+            if (result.problem.description) {
+              result.problem.description = this.$markDown.render(
+                  result.problem.description.toString()
+              );
+            }
+            if (result.problem.input) {
+              result.problem.input = this.$markDown.render(
+                  result.problem.input.toString()
+              );
+            }
+            if (result.problem.output) {
+              result.problem.output = this.$markDown.render(
+                  result.problem.output.toString()
+              );
+            }
+            if (result.problem.hint) {
+              result.problem.hint = this.$markDown.render(
+                  result.problem.hint.toString()
+              );
+            }
+            if (result.problem.userExtraFile) {
+              this.userExtraFile = JSON.parse(result.problem.userExtraFile);
+            }
 
             this.problemData = result;
 
