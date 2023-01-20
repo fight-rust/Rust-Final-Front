@@ -1262,9 +1262,7 @@ const adminApi = {
     if (keyword) {
       params.keyword = keyword
     }
-    return ajax('/api/admin/contest/get-contest-list', 'get', {
-      params: params
-    })
+    return ajax('/api/admin/contest/get-contest-list', 'get')
   },
   admin_getContestAnnouncementList(cid, currentPage, limit) {
     return ajax('/api/admin/contest/announcement', 'get', {
