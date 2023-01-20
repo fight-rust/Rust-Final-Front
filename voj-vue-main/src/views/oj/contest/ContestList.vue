@@ -10,7 +10,7 @@
             {{ $t('m.Contests') }}</span
           >
           <div class="filter-row">
-            <span>
+            <!-- <span>
               <el-dropdown
                   class="drop-menu"
                   placement="bottom"
@@ -33,9 +33,9 @@
                   <el-dropdown-item command="1">OI</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
-            </span>
+            </span> -->
 
-            <span>
+            <!-- <span>
               <el-dropdown
                   class="drop-menu"
                   placement="bottom"
@@ -65,7 +65,7 @@
                     }}</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
-            </span>
+            </span> -->
 
             <!-- <span>
               <vxe-input
