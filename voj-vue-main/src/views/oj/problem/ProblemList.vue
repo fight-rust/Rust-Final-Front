@@ -7,7 +7,7 @@
             <el-col :sm="5" :xs="24">
               <span class="problem-list-title">{{ $t('m.Problem_List') }}</span>
             </el-col>
-            <el-col :sm="6" :xs="24">
+            <!-- <el-col :sm="6" :xs="24">
               <vxe-input
                   v-model="query.keyword"
                   :placeholder="$t('m.Enter_keyword')"
@@ -60,7 +60,7 @@
               >{{ $t('m.Reset') }}
               </el-button
               >
-            </el-col>
+            </el-col> -->
           </el-row>
 
           <!-- <section>

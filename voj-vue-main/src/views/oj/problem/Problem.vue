@@ -979,6 +979,9 @@ export default {
         this.contestID = this.$route.params.contestID;
         console.log("contest",this.$route.params.contestID);
       }
+      else{
+        this.contestID = 0;
+      }
       this.problemID = this.$route.params.problemID;
       console.log("problem",this.$route.params.problemID);
       if (this.$route.params.trainingID) {
