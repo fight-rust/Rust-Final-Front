@@ -265,6 +265,9 @@ export default {
       }
     },
     handleRegister() {
+      setTimeout(() => {
+        mMessage.error("与后端连接超时，请确认后端是否开启！");
+      }, 1000);
       this.$refs['registerForm'].validate((valid) => {
         if (valid) {
           const _this = this;

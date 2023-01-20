@@ -153,11 +153,13 @@ export default {
         this.verify.loginSuccess = true;
         let time = (times / 1000).toFixed(1);
         this.verify.loginMsg = 'Total time ' + time + 's';
-        setTimeout(() => {
-          this.loginSlideBlockVisible = false;
-          this.verify.loginSuccess = false;
-        }, 1000);
+
       }
+      setTimeout(() => {
+        this.loginSlideBlockVisible = false;
+        this.verify.loginSuccess = false;
+        mMessage.error("与后端连接超时，请确认后端是否开启！");
+      }, 1000);
       this.$refs['formLogin'].validate((valid) => {
         if (valid) {
           this.btnLoginLoading = true;
