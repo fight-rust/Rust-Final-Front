@@ -200,7 +200,7 @@
                       <div class="flex-container example">
                         <div class="example-input">
                           <p class="title">
-                            {{ $t('m.Sample_Input') }}
+                             用例
                             <a
                                 v-clipboard:copy="problemData.problem.example"
                                 v-clipboard:error="onCopyError"
@@ -210,7 +210,7 @@
                               <i class="el-icon-document-copy"></i>
                             </a>
                           </p>
-                          <pre>{{ problemData.problem.example }}</pre>
+                          <pre >{{ problemData.problem.example }}</pre>
                         </div>
                         <!-- <div class="example-output">
                           <p class="title">
@@ -1064,6 +1064,8 @@ export default {
             result.problem = res.data;
             this.changeDomTitle({title: result.problem.title});
             result['myStatus'] = -10; // 设置默认值
+            this.problemData = result;
+
             // result.problem.examples = utils.stringToExamples(
             //     result.problem.examples
             // );
@@ -1091,7 +1093,6 @@ export default {
             //   this.userExtraFile = JSON.parse(result.problem.userExtraFile);
             // }
 
-            // this.problemData = result;
 
             // this.loading = false;
 
