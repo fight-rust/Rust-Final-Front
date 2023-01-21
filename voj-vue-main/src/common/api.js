@@ -240,11 +240,17 @@ const ojApi = {
   },
 
   // 提交评测模块
+  // submitCode(data) {
+  //   return ajax('/api/jobs', 'post', {
+  //     data
+  //   })
+  // },
   submitCode(data) {
     return ajax('/api/jobs', 'post', {
       data
     })
   },
+
   // 获取单个提交的信息
   getSubmission(submitId) {
     return ajax('/api/submission', 'get', {
@@ -276,12 +282,27 @@ const ojApi = {
       data
     })
   },
-  getSubmissionList(limit, params) {
-    params.limit = limit
-    return ajax('/api/submissions', 'get', {
-      params
+  //获得提交列表
+  getSubmissionList() {
+    return ajax('/api/jobs', 'get', {
+
     })
   },
+  // getSubmissionList(limit, params) {
+  //   params.limit = limit
+  //   return ajax('/api/submissions', 'get', {
+  //     params
+  //   })
+  // },
+
+  //获得当前用户当前题目的提交列表
+  getFilteredSubmit(data){
+    return ajax('/api/jobs/filter', 'post', {
+      data
+    })
+  },
+
+
   checkSubmissionsStatus(submitIds, cid) {
     return ajax('/api/check-submissions-status', 'post', {
       data: {submitIds, cid}

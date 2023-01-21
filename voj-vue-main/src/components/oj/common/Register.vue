@@ -29,6 +29,12 @@
             @keyup.enter.native="handleRegister"
         ></el-input>
       </el-form-item>
+      <el-form-item label="是否为管理员">
+        <el-radio-group v-model="registerForm.radio">
+          <el-radio-button label="1">是</el-radio-button>
+          <el-radio-button label="0">否</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
     </el-form>
     <div class="footer">
       <el-button
@@ -91,12 +97,14 @@ export default {
       callback();
     };
     return {
+
       btnRegisterLoading: false,
       btnEmailLoading: false,
       countdownNum: null,
       registerForm: {
         username: '',
         password: '',
+        radio:'0',
         passwordAgain: '',
         email: '',
         code: '',
@@ -257,13 +265,18 @@ export default {
       }
     },
     handleRegister() {
+      setTimeout(() => {
+        mMessage.error("与后端连接超时，请确认后端是否开启！");
+      }, 1000);
       this.$refs['registerForm'].validate((valid) => {
         if (valid) {
           const _this = this;
           let formData = Object.assign({}, this.registerForm);
           delete formData['passwordAgain'];
           this.btnRegisterLoading = true;
-          api.register(formData).then(
+          let temp={username:this.registerForm.username,password:this.registerForm.password,radio:this.registerForm.radio};
+          console.log(temp);
+          api.register(temp).then(
               (res) => {
                 let response=res.data.response;
                 if(response!=="fail"){
