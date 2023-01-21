@@ -25,24 +25,6 @@
                     }}</el-tag></span
                   >
                   <div class="problem-menu">
-                    <span v-if="!contestID">
-                      <el-link
-                          :underline="false"
-                          type="primary"
-                          @click="goProblemDiscussion"
-                      ><i aria-hidden="true" class="fa fa-comments"></i>
-                        {{ $t('m.Problem_Discussion') }}</el-link
-                      ></span
-                    >
-                    <span>
-                      <el-link
-                          :underline="false"
-                          type="primary"
-                          @click="graphVisible = !graphVisible"
-                      ><i aria-hidden="true" class="fa fa-pie-chart"></i>
-                        {{ $t('m.Statistic') }}</el-link
-                      ></span
-                    >
                     <span>
                       <el-link
                           :underline="false"
@@ -57,17 +39,17 @@
                     <template v-if="!isCFProblem">
                       <span
                       >{{ $t('m.Time_Limit') }}：C/C++
-                        {{ problemData.problem.timeLimit }}MS，{{
+                        3000MS，{{
                           $t('m.Other')
                         }}
-                        {{ problemData.problem.timeLimit * 2 }}MS</span
+                        5000MS</span
                       ><br/>
                       <span
                       >{{ $t('m.Memory_Limit') }}：C/C++
-                        {{ problemData.problem.memoryLimit }}MB，{{
+                        200MB，{{
                           $t('m.Other')
                         }}
-                        {{ problemData.problem.memoryLimit * 2 }}MB</span
+                        150MB</span
                       ><br/>
                     </template>
 
