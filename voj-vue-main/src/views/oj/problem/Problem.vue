@@ -1043,11 +1043,12 @@ export default {
       // this.setDisplayStyle()
       if (this.$route.params.contestID) {
         this.contestID = this.$route.params.contestID;
-        console.log("contest",this.$route.params.contestID);
+        // console.log("contest",this.$route.params.contestID);
       }
       else{
         this.contestID = 0;
           }
+          console.log("contest",this.$route.params.contestID);
           this.problemID = this.$route.params.problemID;
           this.$store.getters.userName!='username'
           let func ='getProblem';

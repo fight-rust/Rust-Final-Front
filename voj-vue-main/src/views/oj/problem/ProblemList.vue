@@ -546,6 +546,7 @@ export default {
             //   }
             // }
             this.loadings.table = false;
+            console.log("problemList",this.problemList);
           },
           (res) => {
             this.loadings.table = false;

@@ -227,12 +227,10 @@ export default {
     this.CONTEST_STATUS = Object.assign({}, CONTEST_STATUS);
     this.CONTEST_STATUS_REVERSE = Object.assign({}, CONTEST_STATUS_REVERSE);
     this.RULE_TYPE = Object.assign({}, RULE_TYPE);
-    api.getContest(this.contestID).then((res) => {
-      console.log("test",res.data);
-      this.Contest = res.data;
-      console.log("length",res.data.problem_ids.length);
-      for( let i=0;i<res.data.problem_ids.length;i++){
-        let qId=res.data.problem_ids[i];
+    let problem_list = this.$route.params.problem_ids;
+    console.log("problem",problem_list)
+      for( let i=0;i<problem_list.length;i++){
+        let qId=problem_list[i];
         // console.log(qi)
         api.getProblem(qId).then(
           (res) => {
@@ -247,7 +245,7 @@ export default {
             this.loading = false;
           });
         }
-    });
+
 
   },
   methods: {
