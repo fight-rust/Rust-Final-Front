@@ -218,7 +218,7 @@ export const m = {
   Update_Balloon_Color_Successfully: '更新该题气球颜色成功！',
 
   // /views/admin/problem/Problem.vue
-  Problem_Display_ID: '题目展示ID',
+  Problem_Display_ID: '题目名',
   Contest_Display_Title: '比赛中的展示标题',
   Contest_Display_ID: '比赛中的展示ID',
   Description: '描述',

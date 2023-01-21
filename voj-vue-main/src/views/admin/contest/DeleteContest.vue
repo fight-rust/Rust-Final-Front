@@ -136,7 +136,7 @@ export default {
     };
   },
   created() {
-    api.admin_getContestList(page, this.pageSize, this.keyword).then(
+    api.admin_getContestList().then(
         (res) => {
           for(let i=0;i<res.data.cid.length;i++){
             this.contestid[i]=res.data.cid[i];
@@ -227,7 +227,6 @@ export default {
         }
         temp2.push(num);
       }
-
       let temp3={deleteid:temp2};
 
       if(flag===1){

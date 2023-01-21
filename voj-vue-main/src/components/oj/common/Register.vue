@@ -265,8 +265,10 @@ export default {
       }
     },
     handleRegister() {
+      let flag=0;
       setTimeout(() => {
-        mMessage.error("与后端连接超时，请确认后端是否开启！");
+        if(flag===0)
+          mMessage.error("与后端连接超时，请确认后端是否开启！");
       }, 1000);
       this.$refs['registerForm'].validate((valid) => {
         if (valid) {
@@ -278,6 +280,7 @@ export default {
           console.log(temp);
           api.register(temp).then(
               (res) => {
+                flag=1;
                 let response=res.data.response;
                 if(response!=="fail"){
                   mMessage.success(this.$i18n.t('m.Thanks_for_registering'));

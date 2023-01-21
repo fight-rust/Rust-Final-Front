@@ -155,10 +155,12 @@ export default {
         this.verify.loginMsg = 'Total time ' + time + 's';
 
       }
+      let flag=0;
       setTimeout(() => {
         this.loginSlideBlockVisible = false;
         this.verify.loginSuccess = false;
-        mMessage.error("与后端连接超时，请确认后端是否开启！");
+        if(flag===0)
+          mMessage.error("与后端连接超时，请确认后端是否开启！");
       }, 1000);
       this.$refs['formLogin'].validate((valid) => {
         if (valid) {
@@ -166,6 +168,7 @@ export default {
           let formData = Object.assign({}, this.formLogin);
           api.login(formData).then(
               (res) => {
+                flag=1;
                 this.btnLoginLoading = false;
                 this.changeModalStatus({visible: false});
 

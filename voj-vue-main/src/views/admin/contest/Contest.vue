@@ -180,10 +180,10 @@ export default {
           }
         }
     );
-    api.admin_getContestList(page, this.pageSize, this.keyword).then(
+    api.admin_getContestList().then(
         (res) => {
           for(let i=0;i<res.data.cid.length;i++){
-            this.contestname=res.data.ctitle[i];
+            this.contestname.push(res.data.ctitle[i]);
           }
         }
     );
