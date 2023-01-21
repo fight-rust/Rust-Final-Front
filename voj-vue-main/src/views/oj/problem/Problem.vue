@@ -3,7 +3,6 @@
     <div id="problem-main">
       <!--problem main-->
       <el-row class="problem-box">
-<!--        <el-col :lg="12" :md="24" :sm="24" class="problem-left">-->
         <el-col :lg="12" :md="24" :sm="24" :class="problemLeftClass" >
           <el-tabs
               v-model="activeName"
@@ -25,45 +24,6 @@
                       $t('m.Contest_Problem')
                     }}</el-tag></span
                   >
-                  <!-- <div
-                      v-else-if="problemData.tags.length > 0"
-                      class="problem-tag"
-                  >
-                    <el-popover
-                        placement="right-start"
-                        trigger="hover"
-                        width="60"
-                    >
-                      <el-tag
-                          slot="reference"
-                          effect="plain"
-                          size="small"
-                          style="cursor: pointer;"
-                          type="primary"
-                      >{{ $t('m.Show_Tags') }}
-                      </el-tag
-                      >
-                      <el-tag
-                          v-for="(tag, index) in problemData.tags"
-                          :key="index"
-                          :color="tag.color ? tag.color : '#409eff'"
-                          effect="dark"
-                          size="small"
-                          style="margin-right:5px;margin-top:2px"
-                      >{{ tag.name }}
-                      </el-tag
-                      >
-                    </el-popover>
-                  </div>
-                  <div
-                      v-else-if="problemData.tags.length == 0"
-                      class="problem-tag"
-                  >
-                    <el-tag effect="plain" size="small">{{
-                        $t('m.No_tag')
-                      }}
-                    </el-tag>
-                  </div> -->
                   <div class="problem-menu">
                     <span v-if="!contestID">
                       <el-link
@@ -212,20 +172,6 @@
                           </p>
                           <pre >{{ problemData.problem.example }}</pre>
                         </div>
-                        <!-- <div class="example-output">
-                          <p class="title">
-                            {{ $t('m.Sample_Output') }} {{ index + 1 }}
-                            <a
-                                v-clipboard:copy="example.output"
-                                v-clipboard:error="onCopyError"
-                                v-clipboard:success="onCopy"
-                                class="copy"
-                            >
-                              <i class="el-icon-document-copy"></i>
-                            </a>
-                          </p>
-                          <pre>{{ example.output }}</pre>
-                        </div> -->
                       </div>
                     </div>
                   </template>
@@ -303,137 +249,6 @@
         label="运行时间">
     </el-table-column>
       </el-table>
-                  <!-- <vxe-table
-                      :data="mySubmissions"
-                      :loading="loadingTable"
-                      align="center"
-                      auto-resize
-                      border="inner"
-                      stripe
-                  >
-                    <vxe-table-column
-                        :title="$t('m.Submit_Time')"
-                        min-width="96"
-                    >
-                      <template v-slot="{ row }">
-                        <span
-                        ><el-tooltip
-                            :content="row.submitTime | localtime"
-                            placement="top"
-                        >
-                            <span>{{ row.submitTime | fromNow }}</span>
-                          </el-tooltip></span
-                        >
-                      </template>
-                    </vxe-table-column>
-                    <vxe-table-column
-                        :title="$t('m.Status')"
-                        field="status"
-                        min-width="160"
-                    >
-                      <template v-slot="{ row }">
-                        <span :class="getStatusColor(row.status)">{{
-                            JUDGE_STATUS[row.status].name
-                          }}</span>
-                      </template>
-                    </vxe-table-column>
-                    <vxe-table-column :title="$t('m.Time')" min-width="96">
-                      <template v-slot="{ row }">
-                        <span>{{ submissionTimeFormat(row.time) }}</span>
-                      </template>
-                    </vxe-table-column>
-                    <vxe-table-column :title="$t('m.Memory')" min-width="96">
-                      <template v-slot="{ row }">
-                        <span>{{ submissionMemoryFormat(row.memory) }}</span>
-                      </template>
-                    </vxe-table-column>
-                    <vxe-table-column
-                        v-if="problemData.problem.type == 1"
-                        :title="$t('m.Score')"
-                        min-width="64"
-                    >
-                      <template v-slot="{ row }">
-                        <template v-if="contestID && row.score != null">
-                          <el-tag
-                              :type="JUDGE_STATUS[row.status]['type']"
-                              effect="plain"
-                              size="medium"
-                          >{{ row.score }}
-                          </el-tag
-                          >
-                        </template>
-                        <template v-else-if="row.score != null">
-                          <el-tooltip placement="top">
-                            <div slot="content">
-                              {{ $t('m.Problem_Score') }}：{{
-                                row.score != null ? row.score : $t('m.Unknown')
-                              }}<br/>{{ $t('m.OI_Rank_Score') }}：{{
-                                row.oiRankScore != null
-                                    ? row.oiRankScore
-                                    : $t('m.Unknown')
-                              }}<br/>
-                              {{
-                                $t('m.OI_Rank_Calculation_Rule')
-                              }}：(score*0.1+difficulty*2)*(ac_cases/sum_cases)
-                            </div>
-                            <el-tag
-                                :type="JUDGE_STATUS[row.status]['type']"
-                                effect="plain"
-                                size="medium"
-                            >{{ row.score }}
-                            </el-tag
-                            >
-                          </el-tooltip>
-                        </template>
-                        <template
-                            v-else-if="
-                            row.status == JUDGE_STATUS_RESERVE['Pending'] ||
-                              row.status == JUDGE_STATUS_RESERVE['Compiling'] ||
-                              row.status == JUDGE_STATUS_RESERVE['Judging']
-                          "
-                        >
-                          <el-tag
-                              :type="JUDGE_STATUS[row.status]['type']"
-                              effect="plain"
-                              size="medium"
-                          >
-                            <i class="el-icon-loading"></i>
-                          </el-tag>
-                        </template>
-                        <template v-else>
-                          <el-tag
-                              :type="JUDGE_STATUS[row.status]['type']"
-                              effect="plain"
-                              size="medium"
-                          >--
-                          </el-tag
-                          >
-                        </template>
-                      </template>
-                    </vxe-table-column>
-                    <vxe-table-column
-                        :title="$t('m.Language')"
-                        field="language"
-                        min-width="130"
-                        show-overflow
-                    >
-                      <template v-slot="{ row }">
-                        <el-tooltip
-                            :content="$t('m.View_submission_details')"
-                            class="item"
-                            effect="dark"
-                            placement="top"
-                        >
-                          <el-button
-                              type="text"
-                              @click="showSubmitDetail(row)"
-                          >{{ row.language }}
-                          </el-button
-                          >
-                        </el-tooltip>
-                      </template>
-                    </vxe-table-column>
-                  </vxe-table> -->
                   <Pagination
                       :current.sync="mySubmission_currentPage"
                       :page-size="mySubmission_limit"
@@ -481,42 +296,6 @@
             </el-tab-pane>
           </el-tabs>
         </el-col>
-<!--        <div-->
-<!--            :title="$t('m.Shrink_Sidebar')"-->
-<!--            class="problem-resize hidden-md-and-down"-->
-<!--        >-->
-<!--          <span>⋮</span>-->
-<!--          <el-tooltip-->
-<!--              :content="-->
-<!--              toWatchProblem-->
-<!--                ? $t('m.View_Problem_Content')-->
-<!--                : $t('m.Only_View_Problem')-->
-<!--            "-->
-<!--              placement="right"-->
-<!--          >-->
-<!--            <el-button-->
-<!--                circle-->
-<!--                class="right-fold fold"-->
-<!--                icon="el-icon-caret-right"-->
-<!--                size="mini"-->
-<!--                @click.native="onlyWatchProblem"-->
-<!--            ></el-button>-->
-<!--          </el-tooltip>-->
-<!--          <el-tooltip-->
-<!--              :content="$t('m.Put_away_the_full_screen_and_write_the_code')"-->
-<!--              placement="left"-->
-<!--          >-->
-<!--            <el-button-->
-<!--                v-show="toResetWatch"-->
-<!--                circle-->
-<!--                class="left-fold fold"-->
-<!--                icon="el-icon-caret-left"-->
-<!--                size="mini"-->
-<!--                @click.native="resetWatch(false)"-->
-<!--            ></el-button>-->
-<!--          </el-tooltip>-->
-<!--        </div>-->
-<!--        <el-col :lg="12" :md="24" :sm="24" class="problem-right">-->
         <el-col :lg="12" :md="24" :sm="24" :class="problemRightClass" >
           <el-card
               id="submit-code"
@@ -850,17 +629,12 @@ export default {
   },
   mounted() {
     this.init();
-    // this.dragControllerDiv();
   },
   beforeMount() {
-    // this.getMySubmission();
   },
   methods: {
     ...mapActions(['changeDomTitle']),
     handleClickTab({name}) {
-      // if (name == 'mySubmission' && this.isAuthenticated) {
-      //   this.getMySubmission();
-      // }
       if (name == 'mySubmission' && this.$store.getters.userName!='username') {
         this.getMySubmission();
       }
@@ -879,53 +653,11 @@ export default {
               var date = new Date(sub.created_time).toJSON();
               sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
             })
-            // this.subList = {};
-            // this.total = res.data.data.total;
-            // this.loadingTable = false;
-            // for(sub in this.submissions){
-            //   Object.assign(this.subList,sub);
-            // }
-            // console.log(this.subList);
           },
           (err) => {
             console.log("fail",err);
-            // this.loadingTable = false;
           }
       );
-      // let params = {
-      //   onlyMine: true,
-      //   currentPage: this.mySubmission_currentPage,
-      //   problemID: this.problemID,
-      //   contestID: this.contestID,
-      //   completeProblemID: true,
-      //   limit: this.mySubmission_limit,
-      // };
-      // if (this.contestID) {
-      //   if (this.contestStatus == CONTEST_STATUS.SCHEDULED) {
-      //     params.beforeContestSubmit = true;
-      //   } else {
-      //     params.beforeContestSubmit = false;
-      //   }
-      // }
-      // let func = this.contestID
-      //     ? 'getContestSubmissionList'
-      //     : 'getSubmissionList';
-      // // this.loadingTable = true;
-      // // api[func](this.mySubmission_limit, utils.filterEmptyValue(params))
-      // //     .then(
-      // //         (res) => {
-      // //           let data = res.data.data;
-      // //           this.mySubmissions = data.records;
-      // //           this.mySubmission_total = data.total;
-      // //           this.loadingTable = false;
-      // //         },
-      // //         (err) => {
-      // //           this.loadingTable = false;
-      // //         }
-      // //     )
-      // //     .catch(() => {
-      // //       this.loadingTable = false;
-      // //     });
     },
     getStatusColor(status) {
       return 'el-tag el-tag--medium status-' + JUDGE_STATUS[status].color;
@@ -1044,10 +776,8 @@ export default {
     },
     init() {
       this.vertical = storage.get("vertical") || false
-      // this.setDisplayStyle()
       if (this.$route.params.contestID) {
         this.contestID = this.$route.params.contestID;
-        // console.log("contest",this.$route.params.contestID);
       }
       else{
         this.contestID = 0;
@@ -1056,9 +786,6 @@ export default {
           this.problemID = this.$route.params.problemID;
           this.$store.getters.userName!='username'
           let func ='getProblem';
-              // this.$route.name === 'ContestProblemDetails'
-              //     ? 'getContestProblem'
-              //     : 'getProblem';
           this.loading = true;
           console.log("test");
       api.getProblem(this.problemID).then(
@@ -1070,76 +797,6 @@ export default {
             this.changeDomTitle({title: result.problem.title});
             result['myStatus'] = -10; // 设置默认值
             this.problemData = result;
-
-            // result.problem.examples = utils.stringToExamples(
-            //     result.problem.examples
-            // );
-            // if (result.problem.description) {
-            //   result.problem.description = this.$markDown.render(
-            //       result.problem.description.toString()
-            //   );
-            // }
-            // if (result.problem.input) {
-            //   result.problem.input = this.$markDown.render(
-            //       result.problem.input.toString()
-            //   );
-            // }
-            // if (result.problem.output) {
-            //   result.problem.output = this.$markDown.render(
-            //       result.problem.output.toString()
-            //   );
-            // }
-            // if (result.problem.hint) {
-            //   result.problem.hint = this.$markDown.render(
-            //       result.problem.hint.toString()
-            //   );
-            // }
-            // if (result.problem.userExtraFile) {
-            //   this.userExtraFile = JSON.parse(result.problem.userExtraFile);
-            // }
-
-
-            // this.loading = false;
-
-            // if (this.$store.getters.userName!='username') {
-            //   let pidList = [result.problem.id];
-            //   let isContestProblemList = this.contestID ? true : false;
-            //   api.getUserProblemStatus(
-            //           pidList,
-            //           isContestProblemList,
-            //           this.contestID
-            //       )
-            //       .then((res) => {
-            //         let statusMap = res.data.data;
-            //         if (statusMap[result.problem.id].status != -10) {
-            //           this.submissionExists = true;
-            //           this.problemData.myStatus =
-            //               statusMap[result.problem.id].status;
-            //         } else {
-            //           this.submissionExists = false;
-            //         }
-            //       });
-
-            // this.isRemote = result.problem.isRemote;
-            // this.changePie(result.problemCount);
-
-            // 在beforeRouteEnter中修改了, 说明本地有code，无需加载template
-            // if (this.code !== '') {
-            //   return;
-            // }
-            // if (this.problemData.languages.length != 0) {
-            //   if (
-            //       !this.language ||
-            //       this.problemData.languages.indexOf(this.language) == -1
-            //   ) {
-            //     this.language = this.problemData.languages[0];
-            //   }
-            // }
-            // try to load problem template
-            // let codeTemplate = this.problemData.codeTemplate;
-            // if (codeTemplate && codeTemplate[this.language]) {
-            //   this.code = codeTemplate[this.language];
-            // }
             this.$nextTick((_) => {
               addCodeBtn();
             });
@@ -1154,12 +811,6 @@ export default {
     changePie(problemData) {
       let total = problemData.total;
       let acNum = problemData.ac;
-      // 该状态结果数为0的不显示,同时一些无关参数也排除
-      // for (let k in problemData) {
-      //   if (problemData[k] == 0 || filtedStatus.indexOf(k) === -1) {
-      //     delete problemData[k];
-      //   }
-      // }
 
       let data = [
         {name: 'WA', value: total - acNum},
@@ -1339,110 +990,24 @@ export default {
         myMessage.error(this.$i18n.t('m.Code_Length_can_not_exceed_65535'));
         return;
       }
-
-      // // 比赛题目需要检查是否有权限提交
-      // if (!this.canSubmit && this.$route.params.contestID) {
-      //   this.submitPwdVisible = true;
-      //   return;
-      // }
-
       this.submissionId = '';
       this.result = {status: 9};
       this.submitting = true;
       let data = {
-        // pid: this.problemID, // 如果是比赛题目就为display_id
-        // language: this.language,
-        // code: this.code,
-        // cid: this.contestID,
-        // tid: this.trainingID,
-        // isRemote: this.isRemote,
         source_code:this.code,
         user_name:this.$store.getters.userName,
         contest_id:this.contestID,
         problem_id:this.problemID,
       };
-      // if (this.captchaRequired) {
-      //   data.captcha = this.captchaCode;
-      // }
       api.submitCode(data).then(
           (res) => {
-            console.log("success",res.data);
-            // this.total = res.data.data.total;
-            // this.loading = false;
             this.submitting = false;
             this.$message.success('提交成功!');
           },
           (err) => {
-            // this.loading = false;
             console.log("fail",err);
           }
       );
-      // const submitFunc = (data, detailsVisible) => {
-      //   this.statusVisible = true;
-      //   api.submitCode(data).then(
-      //       (res) => {
-      //         this.submissionId = res.data.data && res.data.data.submitId;
-      //         // 定时检查状态
-      //         this.submitting = false;
-      //         this.submissionExists = true;
-      //         if (!detailsVisible) {
-      //           this.$Modal.success({
-      //             title: 'Success',
-      //             content: this.$i18n.t('m.Submit_code_successfully'),
-      //           });
-      //           return;
-      //         } else {
-      //           myMessage.success(res.data.msg);
-      //         }
-      //         // 更新store的可提交权限
-      //         if (!this.canSubmit) {
-      //           this.$store.commit('contestIntoAccess', {access: true});
-      //         }
-      //         this.submitted = true;
-      //         this.checkSubmissionStatus();
-      //       },
-      //       (res) => {
-      //         // this.getCaptchaSrc();
-      //         // if (res.data.data.startsWith('Captcha is required')) {
-      //         //   this.captchaRequired = true;
-      //         // }
-      //         this.submitting = false;
-      //         this.statusVisible = false;
-      //       }
-      //   );
-      // };
-
-      // if (
-      //     this.contestRuleType === RULE_TYPE.OI &&
-      //     !this.ContestRealTimePermission
-      // ) {
-      //   if (this.submissionExists) {
-      //     this.$confirm(
-      //         this.$i18n.t(
-      //             'm.You_have_submission_in_this_problem_sure_to_cover_it'
-      //         ),
-      //         'Warning',
-      //         {
-      //           confirmButtonText: this.$i18n.t('m.OK'),
-      //           cancelButtonText: this.$i18n.t('m.Cancel'),
-      //           type: 'warning',
-      //         }
-      //     )
-      //         .then(() => {
-      //           // 暂时解决对话框与后面提示对话框冲突的问题(否则一闪而过）
-      //           setTimeout(() => {
-      //             submitFunc(data, false);
-      //           }, 1000);
-      //         })
-      //         .catch(() => {
-      //           this.submitting = false;
-      //         });
-      //   } else {
-      //     submitFunc(data, false);
-      //   }
-      // } else {
-      //   submitFunc(data, true);
-      // }
     },
 
     reSubmit(submitId) {

@@ -7,124 +7,7 @@
             <el-col :sm="5" :xs="24">
               <span class="problem-list-title">{{ $t('m.Problem_List') }}</span>
             </el-col>
-            <!-- <el-col :sm="6" :xs="24">
-              <vxe-input
-                  v-model="query.keyword"
-                  :placeholder="$t('m.Enter_keyword')"
-                  class="filter-mt"
-                  size="medium"
-                  type="search"
-                  @search-click="filterByKeyword"
-                  @keyup.enter.native="filterByKeyword"
-              ></vxe-input>
-            </el-col>
-            <el-col
-                :sm="5"
-                :xs="12"
-                class="filter-mt"
-                style="text-align: center;padding-top: 6px;"
-            >
-              <vxe-checkbox
-                  v-model="tagVisible"
-                  @change="changeTagVisible(tagVisible)"
-              >{{ $t('m.Show_Tags') }}
-              </vxe-checkbox
-              >
-            </el-col>
-            <el-col
-                :sm="3"
-                :xs="12"
-                class="filter-mt"
-                style="text-align: center;padding-top: 6px;"
-            >
-              <vxe-checkbox
-                  v-if="isSuperAdmin || isProblemAdmin"
-                  v-model="query.problemVisible"
-                  @change="changeProblemVisible"
-              >{{ $t('m.Show_All_Problem') }}
-              </vxe-checkbox
-              >
-            </el-col>
-            <el-col
-                :sm="5"
-                :xs="12"
-                class="filter-mt"
-                style="text-align: center;"
-            >
-              <el-button
-                  icon="el-icon-refresh"
-                  round
-                  size="small"
-                  type="primary"
-                  @click="onReset"
-              >{{ $t('m.Reset') }}
-              </el-button
-              >
-            </el-col> -->
           </el-row>
-
-          <!-- <section>
-            <b class="problem-filter">{{ $t('m.Problem_Bank') }}</b>
-            <div>
-              <el-tag
-                  :effect="query.oj === 'All' ? 'dark' : 'plain'"
-                  class="filter-item"
-                  size="medium"
-                  @click="filterByOJ('All')"
-              >{{ $t('m.All') }}
-              </el-tag
-              >
-              <el-tag
-                  :effect="
-                  query.oj === 'LOCAL' || query.oj === '' ? 'dark' : 'plain'
-                "
-                  class="filter-item"
-                  size="medium"
-                  @click="filterByOJ('LOCAL')"
-              >{{ $t('m.My_OJ') }}
-              </el-tag
-              >
-              <el-tag
-                  v-for="(remoteOj, index) in REMOTE_OJ"
-                  :key="index"
-                  :effect="query.oj == remoteOj.key ? 'dark' : 'plain'"
-                  class="filter-item"
-                  size="medium"
-                  @click="filterByOJ(remoteOj.key)"
-              >{{ remoteOj.name }}
-              </el-tag
-              >
-            </div>
-          </section>
-
-          <section>
-            <b class="problem-filter">{{ $t('m.Level') }}</b>
-            <div>
-              <el-tag
-                  :effect="
-                  query.difficulty === 'All' || query.difficulty === ''
-                    ? 'dark'
-                    : 'plain'
-                "
-                  class="filter-item"
-                  size="medium"
-                  @click="filterByDifficulty('All')"
-              >{{ $t('m.All') }}
-              </el-tag
-              >
-              <el-tag
-                  v-for="(value, key, index) in PROBLEM_LEVEL"
-                  :key="index"
-                  :effect="query.difficulty == key ? 'dark' : 'plain'"
-                  :style="getLevelBlockColor(key)"
-                  class="filter-item"
-                  size="medium"
-                  @click="filterByDifficulty(key)"
-              >{{ getLevelName(key) }}
-              </el-tag
-              >
-            </div>
-          </section> -->
           <template v-if="filterTagList.length > 0 && buildFilterTagList">
             <el-row>
               <b class="problem-filter">{{ $t('m.Tags') }}</b>
@@ -202,80 +85,8 @@
                 }}</a>
             </template>
           </vxe-table-column>
-
-          <!-- <vxe-table-column
-              :title="$t('m.Level')"
-              field="difficulty"
-              min-width="100"
-          >
-            <template v-slot="{ row }">
-              <span
-                  :style="getLevelColor(row.difficulty)"
-                  class="el-tag el-tag--small"
-              >{{ getLevelName(row.difficulty) }}</span
-              >
-            </template>
-          </vxe-table-column> -->
-
-          <!-- <vxe-table-column
-              :title="$t('m.Tags')"
-              field="tag"
-              min-width="230"
-              visible="false"
-          >
-            <template v-slot="{ row }">
-              <span
-                  v-for="tag in row.tags"
-                  :key="tag.id"
-                  :style="
-                  'cursor: pointer;margin-right:7px;color:#FFF;background-color:' +
-                    (tag.color ? tag.color : '#409eff')
-                "
-                  class="el-tag el-tag--small"
-                  @click="addTag(tag)"
-              >{{ tag.name }}</span
-              >
-            </template>
-          </vxe-table-column>
-          <vxe-table-column
-              :title="$t('m.Total')"
-              field="total"
-              min-width="80"
-          ></vxe-table-column> -->
-          <!-- <vxe-table-column
-              :title="$t('m.AC_Rate')"
-              align="center"
-              field="ac"
-              min-width="120"
-          >
-            <template v-slot="{ row }">
-              <span>
-                <el-tooltip
-                    :content="row.ac + '/' + row.total"
-                    effect="dark"
-                    placement="top"
-                    style="margin-top:0"
-                >
-                  <el-progress
-                      :color="customColors"
-                      :percentage="getPassingRate(row.ac, row.total)"
-                      :stroke-width="20"
-                      :text-inside="true"
-                  ></el-progress>
-                </el-tooltip>
-              </span>
-            </template>
-          </vxe-table-column> -->
         </vxe-table>
       </el-card>
-      <!-- <Pagination
-          :current.sync="query.currentPage"
-          :layout="'prev, pager, next, sizes'"
-          :page-size="limit"
-          :total="total"
-          @on-change="pushRouter"
-          @on-page-size-change="onPageSizeChange"
-      ></Pagination> -->
     </el-col>
 
     <el-col :lg="6" :md="6" :sm="24">
@@ -518,33 +329,7 @@ export default {
       api.getProblemList().then(
           (res) => {
             console.log(res);
-            // this.total = res.data.data.total;
             this.problemList = res.data;
-            // if (this.isAuthenticated) {
-            //   // 如果已登录，则需要查询对当前页面题目列表中各个题目的提交情况
-            //   let pidList = [];
-            //   for (let index = 0; index < this.problemList.length; index++) {
-            //     pidList.push(this.problemList[index].pid);
-            //   }
-            //   if (pidList.length > 0) {
-            //     // 必须当前页有显示题目才发送查询请求
-            //     this.isGetStatusOk = false;
-            //     let isContestProblemList = false; // 为了与比赛题目区分
-            //     api.getUserProblemStatus(pidList, isContestProblemList)
-            //         .then((res) => {
-            //           let result = res.data.data;
-            //           for (
-            //               let index = 0;
-            //               index < this.problemList.length;
-            //               index++
-            //           ) {
-            //             this.problemList[index]['myStatus'] =
-            //                 result[this.problemList[index].pid].status;
-            //           }
-            //           this.isGetStatusOk = true;
-            //         });
-            //   }
-            // }
             this.loadings.table = false;
             console.log("problemList",this.problemList);
           },

@@ -3,78 +3,8 @@
     <el-row class="header">
       <el-col :lg="12" :md="12" :sm="12" :xs="24">
         <div class="select-row">
-          <!-- <span>{{ $t('m.Lang') }}:</span>
-          <span>
-            <el-select
-                :value="this.language"
-                class="left-adjust"
-                size="small"
-                @change="onLangChange"
-            >
-              <el-option v-for="item in languages" :key="item" :value="item"
-              >{{ item }}
-              </el-option>
-            </el-select>
-          </span> -->
-          <!--重置代码-->
-          <!-- <span>
-            <el-tooltip :content="$t('m.Reset_Code')" placement="top">
-              <el-button
-                  icon="el-icon-refresh"
-                  size="small"
-                  @click="onResetClick"
-              ></el-button>
-            </el-tooltip>
-          </span> -->
-          <!--上传文件-->
-          <!-- <span>
-            <el-tooltip :content="$t('m.Upload_file')" placement="top">
-              <el-button
-                  icon="el-icon-upload"
-                  size="small"
-                  @click="onUploadFile"
-              ></el-button>
-            </el-tooltip>
-          </span> -->
-          <!-- <span>
-            <input
-                id="file-uploader"
-                style="display: none"
-                type="file"
-                @change="onUploadFileDone"
-            />
-          </span> -->
         </div>
       </el-col>
-      <!-- <el-col :lg="12" :md="12" :sm="12" :xs="24">
-        <div class="select-row fl-right">
-          <span>{{ $t('m.Display_Mode') }}:</span>
-          <span>
-            <el-tooltip :content="$t('m.Switch_Display')" placement="top">
-            <el-button
-                icon="el-icon-exchange"
-                size="small"
-                @click="onSwitchDisplay"
-            ></el-button>
-          </el-tooltip>
-          </span>
-          <span>{{ $t('m.Theme') }}:</span>
-          <el-select
-              :value="this.theme"
-              class="right-adjust"
-              size="small"
-              @change="onThemeChange"
-          >
-            <el-option
-                v-for="item in themes"
-                :key="item.label"
-                :label="$t('m.' + item.label)"
-                :value="item.value"
-            >{{ $t('m.' + item.label) }}
-            </el-option>
-          </el-select>
-        </div>
-      </el-col> -->
     </el-row>
     <codemirror
         ref="myEditor"
