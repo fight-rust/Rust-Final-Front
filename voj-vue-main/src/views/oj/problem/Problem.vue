@@ -217,28 +217,36 @@
                 <div style="margin:20px 0px;margin-right:10px;">
                   <el-table
         :data="mySubmit"
-        style="width: 100%" stripe>
+        style="width: 100%" stripe >
+        <el-table-column
+        type="index"
+        label="编号"
+        width="50">
+        </el-table-column>
         <el-table-column
           prop="id"
-          label="序号"
-          width="180">
+          label="评测序号"
+          width="100">
         </el-table-column>
         <el-table-column
           prop="contest"
           label="比赛"
-          width="180">
+          width="100">
         </el-table-column>
         <el-table-column
           prop="problem"
-          label="问题">
+          label="问题"
+          width="100">
         </el-table-column>
           <el-table-column
           prop="user"
-          label="用户">
+          label="用户"
+          min-width="100">
         </el-table-column>
           <el-table-column
           prop="created_time"
-          label="提交时间">
+          label="提交时间"
+          width="150">
         </el-table-column>
           <el-table-column
           prop="result"
@@ -456,6 +464,7 @@
                     @click.native="submitCode"
                 >
                   <span v-if="submitting">{{ $t('m.Submitting') }}</span>
+                  <span v-else-if="judging">{{ $t('m.Judging') }}</span>
                   <span v-else>{{ $t('m.Submit') }}</span>
                 </el-button>
               </el-col>
@@ -540,6 +549,7 @@ export default {
       problemID: '',
       trainingID: null,
       submitting: false,
+      judging:false,
       code: '',
       language: '',
       isRemote: false,
@@ -992,7 +1002,8 @@ export default {
       }
       this.submissionId = '';
       this.result = {status: 9};
-      this.submitting = true;
+      // this.submitting = true;
+      this.judging = true;
       let data = {
         source_code:this.code,
         user_name:this.$store.getters.userName,
@@ -1001,8 +1012,9 @@ export default {
       };
       api.submitCode(data).then(
           (res) => {
-            this.submitting = false;
-            this.$message.success('提交成功!');
+            this.judging = false;
+            this.$message.success('评测完成!');
+            this.getMySubmission();
           },
           (err) => {
             console.log("fail",err);
