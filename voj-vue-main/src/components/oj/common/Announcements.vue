@@ -24,13 +24,6 @@
       </span>
     </div>
     <transition-group name="el-collapse-transition">
-<!--      <div-->
-<!--          v-if="!announcements.length"-->
-<!--          key="no-announcement"-->
-<!--          class="no-announcement"-->
-<!--      >-->
-<!--        <el-empty :description="$t('m.No_Announcements')"></el-empty>-->
-<!--      </div>-->
       <template v-if="listVisible">
         <ul key="list" class="announcements-container">
           <li>

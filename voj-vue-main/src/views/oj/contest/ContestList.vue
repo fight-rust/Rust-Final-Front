@@ -9,78 +9,6 @@
             }}
             {{ $t('m.Contests') }}</span
           >
-<<<<<<< HEAD
-          <div class="filter-row">
-            <!-- <span>
-              <el-dropdown
-                  class="drop-menu"
-                  placement="bottom"
-                  trigger="hover"
-                  @command="onRuleChange"
-              >
-                <span class="el-dropdown-link">
-                  {{
-                    query.type == ''
-                        ? $t('m.Rule')
-                        : parseContestType(query.type)
-                  }}
-                  <i class="el-icon-caret-bottom"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="">{{
-                      $t('m.All')
-                    }}</el-dropdown-item>
-                  <el-dropdown-item command="0">ACM</el-dropdown-item>
-                  <el-dropdown-item command="1">OI</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </span> -->
-
-            <!-- <span>
-              <el-dropdown
-                  class="drop-menu"
-                  placement="bottom"
-                  trigger="hover"
-                  @command="onStatusChange"
-              >
-                <span class="el-dropdown-link">
-                  {{
-                    query.status === ''
-                        ? $t('m.Status')
-                        : $t('m.' + CONTEST_STATUS_REVERSE[query.status]['name'])
-                  }}
-                  <i class="el-icon-caret-bottom"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="">{{
-                      $t('m.All')
-                    }}</el-dropdown-item>
-                  <el-dropdown-item command="-1">{{
-                      $t('m.Scheduled')
-                    }}</el-dropdown-item>
-                  <el-dropdown-item command="0">{{
-                      $t('m.Running')
-                    }}</el-dropdown-item>
-                  <el-dropdown-item command="1">{{
-                      $t('m.Ended')
-                    }}</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </span> -->
-
-            <!-- <span>
-              <vxe-input
-                  v-model="query.keyword"
-                  :placeholder="$t('m.Enter_keyword')"
-                  size="medium"
-                  type="search"
-                  @keyup.enter.native="filterByChange"
-                  @search-click="filterByChange"
-              ></vxe-input>
-            </span> -->
-          </div>
-=======
->>>>>>> 9c2c482b31f9fdedd14278ee19464d32604cd65d
         </div>
         <div v-loading="loading">
           <p v-show="contests.length == 0" id="no-contest">
@@ -254,12 +182,6 @@
           </ol>
         </div>
       </el-card>
-      <!-- <Pagination
-          :current.sync="currentPage"
-          :pageSize="limit"
-          :total="total"
-          @on-change="getContestList"
-      ></Pagination> -->
     </el-col>
   </el-row>
 </template>
