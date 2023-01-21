@@ -214,7 +214,6 @@ export default {
   },
   created() {
     this.contestID = this.$route.params.contestID;
-    console.log("contestId",this.contestID)
     this.route_name = this.$route.name;
     // this.route_name = 'ContestProblemList';
     if (this.route_name == 'ContestProblemDetails') {
@@ -227,24 +226,34 @@ export default {
     this.CONTEST_STATUS = Object.assign({}, CONTEST_STATUS);
     this.CONTEST_STATUS_REVERSE = Object.assign({}, CONTEST_STATUS_REVERSE);
     this.RULE_TYPE = Object.assign({}, RULE_TYPE);
-    let problem_list = this.$route.params.problem_ids;
-    console.log("problem",problem_list)
-      for( let i=0;i<problem_list.length;i++){
-        let qId=problem_list[i];
-        // console.log(qi)
-        api.getProblem(qId).then(
-          (res) => {
-            console.log("success");
-            console.log("Res",res);
-            let result={};
-            result= res.data;
-            this.problemList.push(result);
+   ;
+    api.getContest(this.contestID).then(
+      (res) => {
+           this.Contest=res.data;
+           let problem_list = this.Contest.problem_ids;
+          for( let i=0;i<problem_list.length;i++){
+            let qId=problem_list[i];
+            // console.log(qi)
+            api.getProblem(qId).then(
+              (res) => {
+                console.log("success");
+                console.log("Res",res);
+                let result={};
+                result= res.data;
+                this.problemList.push(result);
+              },
+              (err) => {
+                console.log("fail");
+                this.loading = false;
+              });
+            }
           },
           (err) => {
             console.log("fail");
             this.loading = false;
           });
-        }
+    console.log("problem",problem_list)
+   
 
 
   },

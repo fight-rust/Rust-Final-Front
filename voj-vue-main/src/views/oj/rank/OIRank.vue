@@ -1,14 +1,6 @@
 <template>
   <el-row justify="space-around" type="flex">
     <el-col :span="24">
-<!--      <el-card :padding="10">-->
-<!--        <div slot="header">-->
-<!--          <span class="panel-title">{{ $t('m.OI_Ranklist') }}</span>-->
-<!--        </div>-->
-<!--        <div class="echarts">-->
-<!--          <ECharts ref="chart" :options="options" auto-resize></ECharts>-->
-<!--        </div>-->
-<!--      </el-card>-->
       <el-card :padding="10">
         <div slot="header">
           <span class="panel-title">{{ $t('m.OI_Ranklist') }}</span>
