@@ -269,7 +269,41 @@
               </template>
               <template v-else>
                 <div style="margin:20px 0px;margin-right:10px;">
-                  <vxe-table
+                  <el-table
+        :data="mySubmit"
+        style="width: 100%" stripe>
+        <el-table-column
+          prop="id"
+          label="序号"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="contest"
+          label="比赛"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="problem"
+          label="问题">
+        </el-table-column>
+          <el-table-column
+          prop="user"
+          label="用户">
+        </el-table-column>
+          <el-table-column
+          prop="created_time"
+          label="提交时间">
+        </el-table-column>
+          <el-table-column
+          prop="result"
+          label="结果">
+        </el-table-column>
+        <el-table-column
+        prop="run_time"
+        label="运行时间">
+    </el-table-column>
+      </el-table>
+                  <!-- <vxe-table
                       :data="mySubmissions"
                       :loading="loadingTable"
                       align="center"
@@ -399,7 +433,7 @@
                         </el-tooltip>
                       </template>
                     </vxe-table-column>
-                  </vxe-table>
+                  </vxe-table> -->
                   <Pagination
                       :current.sync="mySubmission_currentPage"
                       :page-size="mySubmission_limit"
@@ -490,7 +524,7 @@
               class="submit-detail"
               shadow="always"
           >
-            <!-- <CodeMirror
+            <CodeMirror
                 :language.sync="language"
                 :languages="problemData.languages"
                 :theme.sync="theme"
@@ -499,7 +533,7 @@
                 @changeTheme="onChangeTheme"
                 @resetCode="onResetToTemplate"
                 @switchDisplayMode="switchDisplayMode"
-            ></CodeMirror> -->
+            ></CodeMirror>
             <el-row>
               <el-col :lg="10" :md="10" :sm="24" style="margin-top:4px;">
                 <!-- <div v-if="!isAuthenticated"> -->
@@ -762,7 +796,7 @@ export default {
       toResetWatch: false,
       toWatchProblem: false,
       activeName: 'problemDetail',
-      loadingTable: false,
+      loadingTable: true,
       mySubmission_total: 0,
       mySubmission_limit: 15,
       mySubmission_currentPage: 1,
@@ -776,6 +810,8 @@ export default {
       userExtraFile: null,
       fileContent: '',
       fileName: '',
+
+      mySubmit:[],
     };
   },
   // 获取缓存中的该题的做题代码，代码语言，代码风格
@@ -816,48 +852,80 @@ export default {
     this.init();
     // this.dragControllerDiv();
   },
+  beforeMount() {
+    // this.getMySubmission();
+  },
   methods: {
     ...mapActions(['changeDomTitle']),
     handleClickTab({name}) {
-      if (name == 'mySubmission' && this.isAuthenticated) {
+      // if (name == 'mySubmission' && this.isAuthenticated) {
+      //   this.getMySubmission();
+      // }
+      if (name == 'mySubmission' && this.$store.getters.userName!='username') {
         this.getMySubmission();
       }
     },
     getMySubmission() {
-      let params = {
-        onlyMine: true,
-        currentPage: this.mySubmission_currentPage,
-        problemID: this.problemID,
-        contestID: this.contestID,
-        completeProblemID: true,
-        limit: this.mySubmission_limit,
+      let data = {
+        problem_id : this.problemID,
+        user_name : this.$store.getters.userName,
       };
-      if (this.contestID) {
-        if (this.contestStatus == CONTEST_STATUS.SCHEDULED) {
-          params.beforeContestSubmit = true;
-        } else {
-          params.beforeContestSubmit = false;
-        }
-      }
-      let func = this.contestID
-          ? 'getContestSubmissionList'
-          : 'getSubmissionList';
-      this.loadingTable = true;
-      // api[func](this.mySubmission_limit, utils.filterEmptyValue(params))
-      //     .then(
-      //         (res) => {
-      //           let data = res.data.data;
-      //           this.mySubmissions = data.records;
-      //           this.mySubmission_total = data.total;
-      //           this.loadingTable = false;
-      //         },
-      //         (err) => {
-      //           this.loadingTable = false;
-      //         }
-      //     )
-      //     .catch(() => {
-      //       this.loadingTable = false;
-      //     });
+      api.getFilteredSubmit(data).then(
+          (res) => {
+            console.log("success",res.data);
+            this.mySubmit = res.data;
+            console.log(this.mySubmit);
+            this.mySubmit.forEach(sub=>{
+              var date = new Date(sub.created_time).toJSON();
+              sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+            })
+            // this.subList = {};
+            // this.total = res.data.data.total;
+            // this.loadingTable = false;
+            // for(sub in this.submissions){
+            //   Object.assign(this.subList,sub);
+            // }
+            // console.log(this.subList);
+          },
+          (err) => {
+            console.log("fail",err);
+            // this.loadingTable = false;
+          }
+      );
+      // let params = {
+      //   onlyMine: true,
+      //   currentPage: this.mySubmission_currentPage,
+      //   problemID: this.problemID,
+      //   contestID: this.contestID,
+      //   completeProblemID: true,
+      //   limit: this.mySubmission_limit,
+      // };
+      // if (this.contestID) {
+      //   if (this.contestStatus == CONTEST_STATUS.SCHEDULED) {
+      //     params.beforeContestSubmit = true;
+      //   } else {
+      //     params.beforeContestSubmit = false;
+      //   }
+      // }
+      // let func = this.contestID
+      //     ? 'getContestSubmissionList'
+      //     : 'getSubmissionList';
+      // // this.loadingTable = true;
+      // // api[func](this.mySubmission_limit, utils.filterEmptyValue(params))
+      // //     .then(
+      // //         (res) => {
+      // //           let data = res.data.data;
+      // //           this.mySubmissions = data.records;
+      // //           this.mySubmission_total = data.total;
+      // //           this.loadingTable = false;
+      // //         },
+      // //         (err) => {
+      // //           this.loadingTable = false;
+      // //         }
+      // //     )
+      // //     .catch(() => {
+      // //       this.loadingTable = false;
+      // //     });
     },
     getStatusColor(status) {
       return 'el-tag el-tag--medium status-' + JUDGE_STATUS[status].color;
@@ -975,89 +1043,83 @@ export default {
       this.toResetWatch = false;
     },
     init() {
-      
       this.vertical = storage.get("vertical") || false
-      this.setDisplayStyle()
+      // this.setDisplayStyle()
       if (this.$route.params.contestID) {
         this.contestID = this.$route.params.contestID;
         console.log("contest",this.$route.params.contestID);
       }
       else{
         this.contestID = 0;
-      }
-      this.problemID = this.$route.params.problemID;
-      console.log("problem",this.$route.params.problemID);
-      if (this.$route.params.trainingID) {
-        this.trainingID = this.$route.params.trainingID;
-      }
-      let func ='getProblem';
-          // this.$route.name === 'ContestProblemDetails'
-          //     ? 'getContestProblem'
-          //     : 'getProblem';
-      this.loading = true;
-      console.log("test");
+          }
+          this.problemID = this.$route.params.problemID;
+          this.$store.getters.userName!='username'
+          let func ='getProblem';
+              // this.$route.name === 'ContestProblemDetails'
+              //     ? 'getContestProblem'
+              //     : 'getProblem';
+          this.loading = true;
+          console.log("test");
       api.getProblem(this.problemID).then(
           (res) => {
             console.log("success");
-            console.log("Res",res);
+            console.log("Res",res.data);
             let result={};
             result.problem = res.data;
             this.changeDomTitle({title: result.problem.title});
             result['myStatus'] = -10; // 设置默认值
+            // result.problem.examples = utils.stringToExamples(
+            //     result.problem.examples
+            // );
+            // if (result.problem.description) {
+            //   result.problem.description = this.$markDown.render(
+            //       result.problem.description.toString()
+            //   );
+            // }
+            // if (result.problem.input) {
+            //   result.problem.input = this.$markDown.render(
+            //       result.problem.input.toString()
+            //   );
+            // }
+            // if (result.problem.output) {
+            //   result.problem.output = this.$markDown.render(
+            //       result.problem.output.toString()
+            //   );
+            // }
+            // if (result.problem.hint) {
+            //   result.problem.hint = this.$markDown.render(
+            //       result.problem.hint.toString()
+            //   );
+            // }
+            // if (result.problem.userExtraFile) {
+            //   this.userExtraFile = JSON.parse(result.problem.userExtraFile);
+            // }
 
-            result.problem.examples = utils.stringToExamples(
-                result.problem.examples
-            );
-            if (result.problem.description) {
-              result.problem.description = this.$markDown.render(
-                  result.problem.description.toString()
-              );
-            }
-            if (result.problem.input) {
-              result.problem.input = this.$markDown.render(
-                  result.problem.input.toString()
-              );
-            }
-            if (result.problem.output) {
-              result.problem.output = this.$markDown.render(
-                  result.problem.output.toString()
-              );
-            }
-            if (result.problem.hint) {
-              result.problem.hint = this.$markDown.render(
-                  result.problem.hint.toString()
-              );
-            }
-            if (result.problem.userExtraFile) {
-              this.userExtraFile = JSON.parse(result.problem.userExtraFile);
-            }
+            // this.problemData = result;
 
-            this.problemData = result;
+            // this.loading = false;
 
-            this.loading = false;
-
-            if (this.isAuthenticated) {
-              let pidList = [result.problem.id];
-              let isContestProblemList = this.contestID ? true : false;
-              api.getUserProblemStatus(
-                      pidList,
-                      isContestProblemList,
-                      this.contestID
-                  )
-                  .then((res) => {
-                    let statusMap = res.data.data;
-                    if (statusMap[result.problem.id].status != -10) {
-                      this.submissionExists = true;
-                      this.problemData.myStatus =
-                          statusMap[result.problem.id].status;
-                    } else {
-                      this.submissionExists = false;
-                    }
-                  });
-            }
+            // if (this.$store.getters.userName!='username') {
+            //   let pidList = [result.problem.id];
+            //   let isContestProblemList = this.contestID ? true : false;
+            //   api.getUserProblemStatus(
+            //           pidList,
+            //           isContestProblemList,
+            //           this.contestID
+            //       )
+            //       .then((res) => {
+            //         let statusMap = res.data.data;
+            //         if (statusMap[result.problem.id].status != -10) {
+            //           this.submissionExists = true;
+            //           this.problemData.myStatus =
+            //               statusMap[result.problem.id].status;
+            //         } else {
+            //           this.submissionExists = false;
+            //         }
+            //       });
 
             // this.isRemote = result.problem.isRemote;
-            this.changePie(result.problemCount);
+            // this.changePie(result.problemCount);
 
             // 在beforeRouteEnter中修改了, 说明本地有code，无需加载template
             // if (this.code !== '') {
@@ -1072,13 +1134,14 @@ export default {
             //   }
             // }
             // try to load problem template
-            let codeTemplate = this.problemData.codeTemplate;
-            if (codeTemplate && codeTemplate[this.language]) {
-              this.code = codeTemplate[this.language];
-            }
+            // let codeTemplate = this.problemData.codeTemplate;
+            // if (codeTemplate && codeTemplate[this.language]) {
+            //   this.code = codeTemplate[this.language];
+            // }
             this.$nextTick((_) => {
               addCodeBtn();
             });
+            this.loading = false;
           },
           (err) => {
             console.log("fail");
@@ -1294,77 +1357,90 @@ export default {
         source_code:this.code,
         user_name:this.$store.getters.userName,
         contest_id:this.contestID,
-        problem_id:this.trainingID,
+        problem_id:this.problemID,
       };
       // if (this.captchaRequired) {
       //   data.captcha = this.captchaCode;
       // }
-      const submitFunc = (data, detailsVisible) => {
-        this.statusVisible = true;
-        api.submitCode(data).then(
-            (res) => {
-              this.submissionId = res.data.data && res.data.data.submitId;
-              // 定时检查状态
-              this.submitting = false;
-              this.submissionExists = true;
-              if (!detailsVisible) {
-                this.$Modal.success({
-                  title: 'Success',
-                  content: this.$i18n.t('m.Submit_code_successfully'),
-                });
-                return;
-              } else {
-                myMessage.success(res.data.msg);
-              }
-              // 更新store的可提交权限
-              if (!this.canSubmit) {
-                this.$store.commit('contestIntoAccess', {access: true});
-              }
-              this.submitted = true;
-              this.checkSubmissionStatus();
-            },
-            (res) => {
-              // this.getCaptchaSrc();
-              // if (res.data.data.startsWith('Captcha is required')) {
-              //   this.captchaRequired = true;
-              // }
-              this.submitting = false;
-              this.statusVisible = false;
-            }
-        );
-      };
+      api.submitCode(data).then(
+          (res) => {
+            console.log("success",res.data);
+            // this.total = res.data.data.total;
+            // this.loading = false;
+            this.submitting = false;
+            this.$message.success('提交成功!');
+          },
+          (err) => {
+            // this.loading = false;
+            console.log("fail",err);
+          }
+      );
+      // const submitFunc = (data, detailsVisible) => {
+      //   this.statusVisible = true;
+      //   api.submitCode(data).then(
+      //       (res) => {
+      //         this.submissionId = res.data.data && res.data.data.submitId;
+      //         // 定时检查状态
+      //         this.submitting = false;
+      //         this.submissionExists = true;
+      //         if (!detailsVisible) {
+      //           this.$Modal.success({
+      //             title: 'Success',
+      //             content: this.$i18n.t('m.Submit_code_successfully'),
+      //           });
+      //           return;
+      //         } else {
+      //           myMessage.success(res.data.msg);
+      //         }
+      //         // 更新store的可提交权限
+      //         if (!this.canSubmit) {
+      //           this.$store.commit('contestIntoAccess', {access: true});
+      //         }
+      //         this.submitted = true;
+      //         this.checkSubmissionStatus();
+      //       },
+      //       (res) => {
+      //         // this.getCaptchaSrc();
+      //         // if (res.data.data.startsWith('Captcha is required')) {
+      //         //   this.captchaRequired = true;
+      //         // }
+      //         this.submitting = false;
+      //         this.statusVisible = false;
+      //       }
+      //   );
+      // };
 
-      if (
-          this.contestRuleType === RULE_TYPE.OI &&
-          !this.ContestRealTimePermission
-      ) {
-        if (this.submissionExists) {
-          this.$confirm(
-              this.$i18n.t(
-                  'm.You_have_submission_in_this_problem_sure_to_cover_it'
-              ),
-              'Warning',
-              {
-                confirmButtonText: this.$i18n.t('m.OK'),
-                cancelButtonText: this.$i18n.t('m.Cancel'),
-                type: 'warning',
-              }
-          )
-              .then(() => {
-                // 暂时解决对话框与后面提示对话框冲突的问题(否则一闪而过）
-                setTimeout(() => {
-                  submitFunc(data, false);
-                }, 1000);
-              })
-              .catch(() => {
-                this.submitting = false;
-              });
-        } else {
-          submitFunc(data, false);
-        }
-      } else {
-        submitFunc(data, true);
-      }
+      // if (
+      //     this.contestRuleType === RULE_TYPE.OI &&
+      //     !this.ContestRealTimePermission
+      // ) {
+      //   if (this.submissionExists) {
+      //     this.$confirm(
+      //         this.$i18n.t(
+      //             'm.You_have_submission_in_this_problem_sure_to_cover_it'
+      //         ),
+      //         'Warning',
+      //         {
+      //           confirmButtonText: this.$i18n.t('m.OK'),
+      //           cancelButtonText: this.$i18n.t('m.Cancel'),
+      //           type: 'warning',
+      //         }
+      //     )
+      //         .then(() => {
+      //           // 暂时解决对话框与后面提示对话框冲突的问题(否则一闪而过）
+      //           setTimeout(() => {
+      //             submitFunc(data, false);
+      //           }, 1000);
+      //         })
+      //         .catch(() => {
+      //           this.submitting = false;
+      //         });
+      //   } else {
+      //     submitFunc(data, false);
+      //   }
+      // } else {
+      //   submitFunc(data, true);
+      // }
     },
 
     reSubmit(submitId) {

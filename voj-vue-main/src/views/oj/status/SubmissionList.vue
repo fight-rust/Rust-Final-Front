@@ -6,11 +6,11 @@
           <el-row :gutter="18">
             <el-col :lg="2" :md="4">
               <span class="panel-title hidden-md-and-down">{{
-                  $t('m.Status')
+                  $t('m.List')
                 }}</span>
             </el-col>
             <el-col :lg="4" :md="4" :sm="8" :xs="10">
-              <el-switch
+              <!-- <el-switch
                   v-model="formFilter.onlyMine"
                   :active-text="$t('m.Mine')"
                   :inactive-text="$t('m.All')"
@@ -18,10 +18,19 @@
                   style="display: block"
                   @change="handleOnlyMine"
               >
-              </el-switch>
+              </el-switch> -->
+              <el-switch
+              v-model="formFilter.onlyMine"
+              :active-text="$t('m.Mine')"
+              :inactive-text="$t('m.All')"
+              :width="40"
+              style="display: block"
+              @change="handleOnlyMine"
+          >
+          </el-switch>
             </el-col>
 
-            <el-col :lg="4" :md="5" :sm="8" :xs="10" style="padding-top: 5px;">
+            <!-- <el-col :lg="4" :md="5" :sm="8" :xs="10" style="padding-top: 5px;">
               <el-dropdown
                   class="drop-menu"
                   placement="bottom"
@@ -36,17 +45,24 @@
                   <el-dropdown-item command="All">{{
                       $t('m.All')
                     }}
-                  </el-dropdown-item>
-                  <el-dropdown-item
+                  </el-dropdown-item> -->
+                  <!-- <el-dropdown-item
                       v-for="result in Object.keys(JUDGE_STATUS_LIST)"
                       :key="result"
                       :command="result"
                   >
                     {{ JUDGE_STATUS_LIST[result].name }}
-                  </el-dropdown-item>
+                  </el-dropdown-item> -->
+                  <!-- <el-dropdown-item
+                  v-for="result in submissions"
+                  :key="result"
+                  :command="result"
+                   >
+                {{result.id}}
+              </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
-            </el-col>
+            </el-col> -->
 
             <el-col :lg="4" :md="5" :sm="8" class="hidden-xs-only">
               <el-button
@@ -54,7 +70,7 @@
                   round
                   size="small"
                   type="primary"
-                  @click="getSubmissions"
+                  @click="getUpdatedSubmissions"
               >{{ $t('m.Refresh') }}
               </el-button
               >
@@ -65,11 +81,11 @@
                   icon="el-icon-refresh"
                   size="small"
                   type="primary"
-                  @click="getSubmissions"
+                  @click="getUpdatedSubmissions"
               ></el-button>
             </el-col>
 
-            <el-col :lg="5" :md="5" :sm="12" :xs="24" class="search">
+            <!-- <el-col :lg="5" :md="5" :sm="12" :xs="24" class="search">
               <vxe-input
                   v-model="formFilter.problemID"
                   :placeholder="$t('m.Enter_Problem_ID')"
@@ -89,255 +105,43 @@
                   @keyup.enter.native="handleQueryChange('username')"
                   @search-click="handleQueryChange('username')"
               ></vxe-input>
-            </el-col>
+            </el-col> -->
           </el-row>
         </div>
-        <vxe-table
-            ref="xTable"
-            :data="submissions"
-            :loading="loadingTable"
-            :row-class-name="tableRowClassName"
-            align="center"
-            auto-resize
-            border="inner"
-            highlight-current-row
-            highlight-hover-row
-            keep-source
-            stripe
-        >
-          <vxe-table-column
-              :title="$t('m.Run_ID')"
-              field="submitId"
-              min-width="96"
-          ></vxe-table-column>
-          <vxe-table-column
-              :title="$t('m.Problem')"
-              field="pid"
-              min-width="150"
-              show-overflow
-          >
-            <template v-slot="{ row }">
-              <span
-                  v-if="contestID"
-                  style="color: rgb(87, 163, 243)"
-                  @click="getProblemUri(row.displayId, true)"
-              >{{ row.displayId + ' ' + row.title }}
-              </span>
-              <span
-                  v-else
-                  style="color: rgb(87, 163, 243)"
-                  @click="getProblemUri(row.displayPid, false)"
-              >{{ row.displayPid + ' ' + row.title }}
-              </span>
-            </template>
-          </vxe-table-column>
-          <vxe-table-column
-              :title="$t('m.Status')"
-              field="status"
-              min-width="160"
-          >
-            <template v-slot="{ row }">
-              <span :class="getStatusColor(row.status)">
-                <i
-                    v-if="
-                    row.status == JUDGE_STATUS_RESERVE['Pending'] ||
-                      row.status == JUDGE_STATUS_RESERVE['Compiling'] ||
-                      row.status == JUDGE_STATUS_RESERVE['Judging']
-                  "
-                    class="el-icon-loading"
-                ></i>
-                <i
-                    v-if="
-                    row.status == JUDGE_STATUS_RESERVE['sf'] &&
-                      row.uid == userInfo.uid
-                  "
-                    class="el-icon-refresh"
-                    @click="reSubmit(row)"
-                ></i>
-                {{ JUDGE_STATUS[row.status].name }}
-              </span>
-            </template>
-          </vxe-table-column>
-          <vxe-table-column
-              v-if="scoreColumnVisible"
-              :title="$t('m.Score')"
-              field="score"
-              min-width="64"
-          >
-            <template v-slot="{ row }">
-              <template v-if="contestID && row.score != null">
-                <el-tag
-                    :type="JUDGE_STATUS[row.status]['type']"
-                    effect="plain"
-                    size="medium"
-                >{{ row.score }}
-                </el-tag
-                >
-              </template>
-              <template v-else-if="row.score != null">
-                <el-tooltip placement="top">
-                  <div slot="content">
-                    {{ $t('m.Problem_Score') }}：{{
-                      row.score != null ? row.score : $t('m.Unknown')
-                    }}<br/>{{ $t('m.OI_Rank_Score') }}：{{
-                      row.oiRankScore != null
-                          ? row.oiRankScore
-                          : $t('m.Unknown')
-                    }}<br/>
-                    {{
-                      $t('m.OI_Rank_Calculation_Rule')
-                    }}：(score*0.1+difficulty*2)*(ac_cases/sum_cases)
-                  </div>
-                  <el-tag
-                      :type="JUDGE_STATUS[row.status]['type']"
-                      effect="plain"
-                      size="medium"
-                  >{{ row.score }}
-                  </el-tag
-                  >
-                </el-tooltip>
-              </template>
-              <template
-                  v-else-if="
-                  row.status == JUDGE_STATUS_RESERVE['Pending'] ||
-                    row.status == JUDGE_STATUS_RESERVE['Compiling'] ||
-                    row.status == JUDGE_STATUS_RESERVE['Judging']
-                "
-              >
-                <el-tag
-                    :type="JUDGE_STATUS[row.status]['type']"
-                    effect="plain"
-                    size="medium"
-                >
-                  <i class="el-icon-loading"></i>
-                </el-tag>
-              </template>
-              <template v-else>
-                <el-tag
-                    :type="JUDGE_STATUS[row.status]['type']"
-                    effect="plain"
-                    size="medium"
-                >--
-                </el-tag
-                >
-              </template>
-            </template>
-          </vxe-table-column>
-          <vxe-table-column :title="$t('m.Time')" field="time" min-width="90">
-            <template v-slot="{ row }">
-              <span>{{ submissionTimeFormat(row.time) }}</span>
-            </template>
-          </vxe-table-column>
-          <vxe-table-column
-              :title="$t('m.Memory')"
-              field="memory"
-              min-width="90"
-          >
-            <template v-slot="{ row }">
-              <span>{{ submissionMemoryFormat(row.memory) }}</span>
-            </template>
-          </vxe-table-column>
-
-          <vxe-table-column
-              :title="$t('m.Length')"
-              field="length"
-              min-width="90"
-          >
-            <template v-slot="{ row }">
-              <span>{{ submissionLengthFormat(row.length) }}</span>
-            </template>
-          </vxe-table-column>
-
-          <vxe-table-column
-              :title="$t('m.Language')"
-              field="language"
-              min-width="90"
-              show-overflow
-          >
-            <template v-slot="{ row }">
-              <el-tooltip
-                  :content="$t('m.View_submission_details')"
-                  class="item"
-                  effect="dark"
-                  placement="top"
-              >
-                <el-button type="text" @click="showSubmitDetail(row)">{{
-                    row.language
-                  }}
-                </el-button>
-              </el-tooltip>
-            </template>
-          </vxe-table-column>
-          <vxe-table-column
-              :title="$t('m.Judger')"
-              field="judger"
-              min-width="90"
-              show-overflow
-          >
-            <template v-slot="{ row }">
-              <span v-if="row.judger">{{ row.judger }}</span>
-              <span v-else>--</span>
-            </template>
-          </vxe-table-column>
-          <vxe-table-column
-              :title="$t('m.Author')"
-              field="username"
-              min-width="90"
-              show-overflow
-          >
-            <template v-slot="{ row }">
-              <a
-                  style="color: rgb(87, 163, 243)"
-                  @click="goUserHome(row.username, row.uid)"
-              >{{ row.username }}</a
-              >
-            </template>
-          </vxe-table-column>
-          <vxe-table-column
-              v-if="contestID && isAdminRole"
-              :title="$t('m.RealName')"
-              field="realname"
-              min-width="90"
-              show-overflow
-          >
-            <template v-slot="{ row }">
-              {{ row.realname }}
-            </template>
-          </vxe-table-column>
-          <vxe-table-column
-              :title="$t('m.Submit_Time')"
-              field="submitTime"
-              min-width="90"
-          >
-            <template v-slot="{ row }">
-              <span
-              ><el-tooltip
-                  :content="row.submitTime | localtime"
-                  placement="top"
-              >
-                  <span>{{ row.submitTime | fromNow }}</span>
-                </el-tooltip></span
-              >
-            </template>
-          </vxe-table-column>
-          <!-- 非比赛提交记录，超级管理员可以对提交进行重判 -->
-          <vxe-table-column
-              v-if="isSuperAdmin"
-              :title="$t('m.Option')"
-              min-width="90"
-          >
-            <template v-slot="{ row }">
-              <vxe-button
-                  :loading="row.loading"
-                  size="mini"
-                  status="primary"
-                  @click="handleRejudge(row)"
-              >{{ $t('m.Rejudge') }}
-              </vxe-button
-              >
-            </template>
-          </vxe-table-column>
-        </vxe-table>
+        <el-table
+        :data="submissions"
+        style="width: 100%" stripe>
+        <el-table-column
+          prop="id"
+          label="序号"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="contest"
+          label="比赛"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="problem"
+          label="问题">
+        </el-table-column>
+          <el-table-column
+          prop="user"
+          label="用户">
+        </el-table-column>
+          <el-table-column
+          prop="created_time"
+          label="提交时间">
+        </el-table-column>
+          <el-table-column
+          prop="result"
+          label="结果">
+        </el-table-column>
+        <el-table-column
+        prop="run_time"
+        label="运行时间">
+    </el-table-column>
+      </el-table>
       </el-card>
       <Pagination
           :current.sync="currentPage"
@@ -388,6 +192,8 @@ export default {
       JUDGE_STATUS_RESERVE: {},
       CONTEST_STATUS: {},
       RULE_TYPE: {},
+      subList:{},
+      filterSubmissions:[],
     };
   },
   created() {
@@ -491,55 +297,78 @@ export default {
           params.beforeContestSubmit = false;
         }
       }
-      if (this.formFilter.onlyMine) {
-        // 需要判断是否为登陆状态
-        // if (this.isAuthenticated) {
-        //   params.username = ''; // 如果是搜索当前用户的提交记录，那么用户名搜索应该无效
-        //   this.formFilter.username = '';
-        // } else {
-          if (this.$store.getters.userName === 'username') {
-            // console.log('未登录');
-            this.formFilter.onlyMine = false;
-            myMessage.error(this.$i18n.t('m.Please_login_first'));
-            return;
-          } else {
-            params.username = ''; // 如果是搜索当前用户的提交记录，那么用户名搜索应该无效
-            this.formFilter.username = '';
-          }
-      }
+      // if (this.formFilter.onlyMine) {
+      //   // 需要判断是否为登陆状态
+      //   // if (this.isAuthenticated) {
+      //   //   params.username = ''; // 如果是搜索当前用户的提交记录，那么用户名搜索应该无效
+      //   //   this.formFilter.username = '';
+      //   // } else {
+      //     if (this.$store.getters.userName === 'username') {
+      //       // console.log('未登录');
+      //       this.formFilter.onlyMine = false;
+      //       myMessage.error(this.$i18n.t('m.Please_login_first'));
+      //       return;
+      //     } else {
+      //       params.username = ''; // 如果是搜索当前用户的提交记录，那么用户名搜索应该无效
+      //       this.formFilter.username = '';
+      //     }
+      // }
 
       this.loadingTable = true;
       this.submissions = [];
       this.needCheckSubmitIds = {};
-      let func = this.contestID
-          ? 'getContestSubmissionList'
-          : 'getSubmissionList';
-      api[func](this.limit, utils.filterEmptyValue(params))
-          .then((res) => {
-            let data = res.data.data;
-            let index = 0;
-            for (let v of data.records) {
-              if (
-                  v.status == JUDGE_STATUS_RESERVE['Pending'] ||
-                  v.status == JUDGE_STATUS_RESERVE['Compiling'] ||
-                  v.status == JUDGE_STATUS_RESERVE['Judging']
-              ) {
-                this.needCheckSubmitIds[v.submitId] = index;
-              }
-              v.loading = false;
-              v.index = index;
-              index += 1;
-            }
+      // let func = this.contestID
+      //     ? 'getContestSubmissionList'
+      //     : 'getSubmissionList';
+      // api[func](this.limit, utils.filterEmptyValue(params))
+      //     .then((res) => {
+      //       let data = res.data.data;
+      //       let index = 0;
+      //       for (let v of data.records) {
+      //         if (
+      //             v.status == JUDGE_STATUS_RESERVE['Pending'] ||
+      //             v.status == JUDGE_STATUS_RESERVE['Compiling'] ||
+      //             v.status == JUDGE_STATUS_RESERVE['Judging']
+      //         ) {
+      //           this.needCheckSubmitIds[v.submitId] = index;
+      //         }
+      //         v.loading = false;
+      //         v.index = index;
+      //         index += 1;
+      //       }
+      //       this.loadingTable = false;
+      //       this.submissions = data.records;
+      //       this.total = data.total;
+      //       if (Object.keys(this.needCheckSubmitIds).length > 0) {
+      //         this.checkSubmissionsStatus();
+      //       }
+      //     })
+      //     .catch(() => {
+      //       this.loadingTable = false;
+      //     });
+
+      api.getSubmissionList().then(
+          (res) => {
+            console.log("success",res.data);
+            this.submissions = res.data;
+            console.log(this.submissions);
+            this.submissions.forEach(sub=>{
+              var date = new Date(sub.created_time).toJSON();
+              sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+            })
+            // this.subList = {};
+            // this.total = res.data.data.total;
             this.loadingTable = false;
-            this.submissions = data.records;
-            this.total = data.total;
-            if (Object.keys(this.needCheckSubmitIds).length > 0) {
-              this.checkSubmissionsStatus();
-            }
-          })
-          .catch(() => {
+            // for(sub in this.submissions){
+            //   Object.assign(this.subList,sub);
+            // }
+            // console.log(this.subList);
+          },
+          (err) => {
+            console.log("fail",err);
             this.loadingTable = false;
-          });
+          }
+      );
     },
     // 对当前提交列表 状态为Pending（6）和Judging（7）的提交记录每2秒查询一下最新结果
     checkSubmissionsStatus() {
@@ -706,20 +535,82 @@ export default {
           }
       );
     },
+
     handleOnlyMine() {
       if (this.formFilter.onlyMine) {
         // 需要判断是否为登陆状态
         // if (this.isAuthenticated) {
+          console.log('---',this.$store.getters.userName);
         if(this.$store.getters.userName != 'username'){
           this.formFilter.username = '';
-        } else {
+          let data = {
+            user_name : this.$store.getters.userName,
+          };
+          api.getFilteredSubmit(data).then(
+              (res) => {
+                console.log("success",res.data);
+                this.submissions = res.data;
+                console.log(this.submissions);
+                this.submissions.forEach(sub=>{
+                  var date = new Date(sub.created_time).toJSON();
+                  sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+                })
+              },
+              (err) => {
+                console.log("fail",err);
+                // this.loadingTable = false;
+              }
+          );
+        } 
+        else {
           this.formFilter.onlyMine = false;
           myMessage.error(this.$i18n.t('m.Please_login_first'));
           return;
         }
       }
+      else{
+        this.getSubmissions();
+      }
       this.currentPage = 1;
-      this.changeRoute();
+      // this.changeRoute();
+    },
+
+    getUpdatedSubmissions(){
+      if (this.formFilter.onlyMine) {
+        // 需要判断是否为登陆状态
+        // if (this.isAuthenticated) {
+          console.log('---',this.$store.getters.userName);
+        if(this.$store.getters.userName != 'username'){
+          this.formFilter.username = '';
+          let data = {
+            user_name : this.$store.getters.userName,
+          };
+          api.getFilteredSubmit(data).then(
+              (res) => {
+                console.log("success",res.data);
+                this.submissions = res.data;
+                console.log(this.submissions);
+                this.submissions.forEach(sub=>{
+                  var date = new Date(sub.created_time).toJSON();
+                  sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+                })
+              },
+              (err) => {
+                console.log("fail",err);
+                // this.loadingTable = false;
+              }
+          );
+        } 
+        else {
+          this.formFilter.onlyMine = false;
+          myMessage.error(this.$i18n.t('m.Please_login_first'));
+          return;
+        }
+      }
+      else{
+        this.getSubmissions();
+      }
+      this.currentPage = 1;
     },
     ...mapActions(['changeModalStatus']),
 
@@ -770,6 +661,13 @@ export default {
     }
   },
   computed: {
+    filterSubmissions()
+    {
+      console.log(this.$store.getters.userName);
+      console.log('123',this.submissions);
+      return this.submissions.filter(sub => !this.formFilter.onlyMine || sub.user.toLowerCase().includes(this.search.toLowerCase()));
+      // return this.submissions.filter((sub) => {return true});
+    },
     ...mapGetters([
       'isAuthenticated',
       'userInfo',

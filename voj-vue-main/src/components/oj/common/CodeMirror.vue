@@ -3,7 +3,7 @@
     <el-row class="header">
       <el-col :lg="12" :md="12" :sm="12" :xs="24">
         <div class="select-row">
-          <span>{{ $t('m.Lang') }}:</span>
+          <!-- <span>{{ $t('m.Lang') }}:</span>
           <span>
             <el-select
                 :value="this.language"
@@ -15,9 +15,9 @@
               >{{ item }}
               </el-option>
             </el-select>
-          </span>
+          </span> -->
           <!--重置代码-->
-          <span>
+          <!-- <span>
             <el-tooltip :content="$t('m.Reset_Code')" placement="top">
               <el-button
                   icon="el-icon-refresh"
@@ -25,9 +25,9 @@
                   @click="onResetClick"
               ></el-button>
             </el-tooltip>
-          </span>
+          </span> -->
           <!--上传文件-->
-          <span>
+          <!-- <span>
             <el-tooltip :content="$t('m.Upload_file')" placement="top">
               <el-button
                   icon="el-icon-upload"
@@ -35,18 +35,18 @@
                   @click="onUploadFile"
               ></el-button>
             </el-tooltip>
-          </span>
-          <span>
+          </span> -->
+          <!-- <span>
             <input
                 id="file-uploader"
                 style="display: none"
                 type="file"
                 @change="onUploadFileDone"
             />
-          </span>
+          </span> -->
         </div>
       </el-col>
-      <el-col :lg="12" :md="12" :sm="12" :xs="24">
+      <!-- <el-col :lg="12" :md="12" :sm="12" :xs="24">
         <div class="select-row fl-right">
           <span>{{ $t('m.Display_Mode') }}:</span>
           <span>
@@ -74,7 +74,7 @@
             </el-option>
           </el-select>
         </div>
-      </el-col>
+      </el-col> -->
     </el-row>
     <codemirror
         ref="myEditor"
