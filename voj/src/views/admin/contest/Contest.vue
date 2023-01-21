@@ -305,7 +305,7 @@ export default {
         temp2.push(num);
       }
 
-      let temp3={problem:temp2,startTime:this.contest.startTime,endTime:this.contest.endTime,title:this.contest.title};
+      let temp3={problem:temp2,start_time:this.contest.startTime,end_time:this.contest.endTime,title:this.contest.title};
 
       if(flag===1){
         let funcName =
