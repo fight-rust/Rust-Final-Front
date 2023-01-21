@@ -10,7 +10,7 @@
                 }}</span>
             </el-col>
             <el-col :lg="4" :md="4" :sm="8" :xs="10">
-              <!-- <el-switch
+              <el-switch
                   v-model="formFilter.onlyMine"
                   :active-text="$t('m.Mine')"
                   :inactive-text="$t('m.All')"
@@ -18,7 +18,7 @@
                   style="display: block"
                   @change="handleOnlyMine"
               >
-              </el-switch> -->
+              </el-switch>
             </el-col>
 
             <!-- <el-col :lg="4" :md="5" :sm="8" :xs="10" style="padding-top: 5px;">
@@ -104,21 +104,23 @@
         style="width: 100%" stripe>
         <el-table-column
           prop="id"
-          label="序号"
-          width="180">
+          label="评测序号"
+          width="150">
         </el-table-column>
         <el-table-column
           prop="contest"
-          label="比赛"
-          width="180">
+          label="比赛序号"
+          width="150">
         </el-table-column>
         <el-table-column
           prop="problem"
-          label="问题">
+          label="题目序号"
+          width="150">
         </el-table-column>
           <el-table-column
           prop="user"
-          label="用户">
+          label="用户"
+          width="180">
         </el-table-column>
           <el-table-column
           prop="created_time"
@@ -126,7 +128,7 @@
         </el-table-column>
           <el-table-column
           prop="result"
-          label="结果">
+          label="评测结果">
         </el-table-column>
         <el-table-column
         prop="run_time"
@@ -344,6 +346,9 @@ export default {
             this.submissions = res.data;
             console.log(this.submissions);
             this.submissions.forEach(sub=>{
+              if(sub.result=='Compiling'){
+                sub.run_time = '/';
+              }
               var date = new Date(sub.created_time).toJSON();
               sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
             })
@@ -582,6 +587,9 @@ export default {
                 this.submissions = res.data;
                 console.log(this.submissions);
                 this.submissions.forEach(sub=>{
+                  if(sub.result=='Compiling'){
+                      sub.run_time = '/';
+                    }
                   var date = new Date(sub.created_time).toJSON();
                   sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
                 })
