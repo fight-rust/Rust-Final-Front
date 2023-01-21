@@ -53,6 +53,10 @@
               $t('m.Create_Contest')
             }}
           </el-menu-item>
+          <el-menu-item index="/admin/contest/delete">{{
+              $t('m.Delete_Contest')
+            }}
+          </el-menu-item>
         </el-submenu>
       </el-menu>
       <div id="header">

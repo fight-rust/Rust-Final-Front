@@ -13,6 +13,7 @@ const Tag = () => import('@/views/admin/problem/Tag')
 const ProblemImportAndExport = () => import('@/views/admin/problem/ImportAndExport')
 const Contest = () => import('@/views/admin/contest/Contest')
 const ContestList = () => import('@/views/admin/contest/ContestList')
+const DeleteContest=()=>import('@/views/admin/contest/DeleteContest')
 const Training = () => import('@/views/admin/training/Training')
 const TrainingList = () => import('@/views/admin/training/TrainingList')
 const TrainingProblemList = () => import('@/views/admin/training/TrainingProblemList')
@@ -143,6 +144,12 @@ const adminRoutes = [
         name: 'admin-contest-list',
         component: ContestList,
         meta: {title: 'Contest List'}
+      },
+      {
+        path: 'contest/delete',
+        name: 'admin-delete-contest',
+        component: DeleteContest,
+        meta: {title: 'Delete Contest'},
       },
       {
         path: 'contest/:contestId/edit',

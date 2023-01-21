@@ -9,6 +9,7 @@
             }}
             {{ $t('m.Contests') }}</span
           >
+<<<<<<< HEAD
           <div class="filter-row">
             <!-- <span>
               <el-dropdown
@@ -78,6 +79,8 @@
               ></vxe-input>
             </span> -->
           </div>
+=======
+>>>>>>> 9c2c482b31f9fdedd14278ee19464d32604cd65d
         </div>
         <div v-loading="loading">
           <p v-show="contests.length == 0" id="no-contest">

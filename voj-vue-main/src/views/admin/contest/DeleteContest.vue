@@ -3,53 +3,16 @@
     <el-card>
       <div slot="header">
         <span class="panel-title home-title">
-          {{ title }}
+          删除比赛
         </span>
       </div>
       <el-form label-position="top">
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item :label="$t('m.Contest_Title')" required>
+            <el-form-item :label="$t('m.Delete_Contest_Title')" required>
               <el-input
-                  v-model="contest.title"
-                  :placeholder="$t('m.Contest_Title')"
-              ></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :md="8" :xs="24">
-            <el-form-item :label="$t('m.Start_Time')" required>
-              <el-date-picker
-                  v-model="contest.startTime"
-                  :placeholder="$t('m.Start_Time')"
-                  type="datetime"
-                  @change="changeDuration"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-              >
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :md="8" :xs="24">
-            <el-form-item :label="$t('m.Contest_End_Time')" required>
-              <el-date-picker
-                  v-model="contest.endTime"
-                  :placeholder="$t('m.Contest_End_Time')"
-                  type="datetime"
-                  @change="changeDuration"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-              >
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :md="8" :xs="24">
-            <el-form-item :label="$t('m.Contest_Duration')" required>
-              <el-input v-model="durationText" disabled></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item :label="$t('m.Contest_pproblem')" required>
-              <el-input
-                  v-model="contest.problem"
-                  :placeholder="$t('m.Contest_pproblemplaceholder')"
+                  v-model="deleteid"
+                  :placeholder="$t('m.Delete_Contest_placeholder')"
               ></el-input>
             </el-form-item>
           </el-col>
@@ -126,8 +89,8 @@
           </template>
         </el-row>
       </el-form>
-      <el-button type="primary" @click.native="saveContest">{{
-          $t('m.Save')
+      <el-button type="primary" @click.native="deleteContest">{{
+          $t('m.DeleteContest')
         }}
       </el-button>
     </el-card>
@@ -153,8 +116,8 @@ export default {
       disableRuleType: false,
       durationText: '', // 比赛时长文本表示
       seal_rank_time: 2, // 当开启封榜模式，即实时榜单关闭时，可选择前半小时，前一小时，全程封榜,默认全程封榜
-      problemid:[],
-      contestname:[],
+      contestid:[],
+      deleteid:'',
       contest: {
         title: '',
         startTime: '',
@@ -173,17 +136,10 @@ export default {
     };
   },
   created() {
-    api.admin_getProblemList(this.contest).then(
-        (res) => {
-          for(let i=0;i<res.data.pid.length;i++){
-            this.problemid[i]=res.data.pid[i];
-          }
-        }
-    );
     api.admin_getContestList().then(
         (res) => {
           for(let i=0;i<res.data.cid.length;i++){
-            this.contestname.push(res.data.ctitle[i]);
+            this.contestid[i]=res.data.cid[i];
           }
         }
     );
@@ -252,42 +208,9 @@ export default {
           });
     },
 
-    saveContest() {
+    deleteContest() {
       let flag=1;
-      if (!this.contest.title) {
-        myMessage.error(
-            this.$i18n.t('m.Contest_Title') + ' ' + this.$i18n.t('m.is_required')
-        );
-        flag=0;
-        return;
-      }
-      if (!this.contest.startTime) {
-        myMessage.error(
-            this.$i18n.t('m.Start_Time') +
-            ' ' +
-            this.$i18n.t('m.is_required')
-        );
-        flag=0;
-        return;
-      }
-      if (!this.contest.endTime) {
-        myMessage.error(
-            this.$i18n.t('m.Contest_End_Time') +
-            ' ' +
-            this.$i18n.t('m.is_required')
-        );
-        flag=0;
-        return;
-      }
-
-      for(let i=0;i<this.contestname.length;i++){
-        if(this.contest.title===this.contestname[i]){
-          myMessage.error("该比赛名已存在！");
-          flag=0;
-        }
-      }
-
-      let temp=this.contest.problem.split(';');
+      let temp=this.deleteid.split(';');
       let temp2=[];
 
       for(let i=0;i<temp.length;i++){
@@ -297,23 +220,17 @@ export default {
           flag=0;
           break;
         }
-        else if(this.problemid.find(item=>item===num)===undefined){
-          myMessage.error("id对应的题目不存在！")
+        else if(this.contestid.find(item=>item===num)===undefined){
+          myMessage.error("id对应的比赛不存在！")
           flag=0;
           break;
         }
         temp2.push(num);
       }
-
-      let temp3={problem:temp2,startTime:this.contest.startTime,endTime:this.contest.endTime,title:this.contest.title};
+      let temp3={deleteid:temp2};
 
       if(flag===1){
-        let funcName =
-            this.$route.name === 'admin-edit-contest'
-                ? 'admin_editContest'
-                : 'admin_createContest';
-
-        api[funcName](temp3)
+        api.admin_deleteContest(temp3)
             .then((res) => {
               myMessage.success('success');
               this.$router.push({

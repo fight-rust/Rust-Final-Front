@@ -875,6 +875,10 @@ export default {
             console.log("success",res.data);
             this.mySubmit = res.data;
             console.log(this.mySubmit);
+            this.mySubmit.forEach(sub=>{
+              var date = new Date(sub.created_time).toJSON();
+              sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+            })
             // this.subList = {};
             // this.total = res.data.data.total;
             // this.loadingTable = false;

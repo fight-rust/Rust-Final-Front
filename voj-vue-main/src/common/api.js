@@ -1262,11 +1262,9 @@ const adminApi = {
       data
     })
   },
-  admin_deleteContest(cid) {
-    return ajax('/api/admin/contest', 'delete', {
-      params: {
-        cid
-      }
+  admin_deleteContest(data) {
+    return ajax('/api/admin/contestdelete', 'post', {
+        data
     })
   },
   admin_changeContestVisible(cid, visible, uid) {
@@ -1279,10 +1277,7 @@ const adminApi = {
     })
   },
   admin_getContestList(currentPage, limit, keyword) {
-    let params = {currentPage, limit}
-    if (keyword) {
-      params.keyword = keyword
-    }
+
     return ajax('/api/admin/contest/get-contest-list', 'get')
   },
   admin_getContestAnnouncementList(cid, currentPage, limit) {
