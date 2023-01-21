@@ -113,21 +113,23 @@
         style="width: 100%" stripe>
         <el-table-column
           prop="id"
-          label="序号"
-          width="180">
+          label="评测序号"
+          width="150">
         </el-table-column>
         <el-table-column
           prop="contest"
-          label="比赛"
-          width="180">
+          label="比赛序号"
+          width="150">
         </el-table-column>
         <el-table-column
           prop="problem"
-          label="问题">
+          label="题目序号"
+          width="150">
         </el-table-column>
           <el-table-column
           prop="user"
-          label="用户">
+          label="用户"
+          width="180">
         </el-table-column>
           <el-table-column
           prop="created_time"
@@ -135,7 +137,7 @@
         </el-table-column>
           <el-table-column
           prop="result"
-          label="结果">
+          label="评测结果">
         </el-table-column>
         <el-table-column
         prop="run_time"
