@@ -1328,6 +1328,11 @@ const adminApi = {
   },
   admin_updateDiscussionReport(data) {
     return ajax("/api/admin/discussion-report", 'put', {
+      username:data
+    })
+  },
+  getTotalAcnum(data){
+    return ajax("/api/totalacnum",'post',{
       data
     })
   }

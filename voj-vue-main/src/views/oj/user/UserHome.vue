@@ -75,89 +75,16 @@
         </span>
         <hr id="split"/>
         <el-row :gutter="12">
-          <el-col :md="8" :sm="24">
+          <el-col>
             <el-card class="submission" shadow="always">
               <p>
                 <i aria-hidden="true" class="fa fa-th"></i>
-                {{ $t('m.UserHome_Submissions') }}
+                总AC题数
               </p>
-              <p class="data-number">{{ profile.total }}</p>
+              <p class="data-number">{{ total_ac }}</p>
             </el-card>
           </el-col>
-          <el-col :md="8" :sm="24">
-            <el-card class="solved" shadow="always">
-              <p>
-                <i aria-hidden="true" class="fa fa-check-circle"></i>
-                {{ $t('m.UserHome_Solved') }}
-              </p>
-              <p class="data-number">{{ profile.solvedList.length }}</p>
-            </el-card>
-          </el-col>
-          <el-col :md="8" :sm="24">
-            <el-card class="score" shadow="always">
-              <p>
-                <i aria-hidden="true" class="fa fa-star"></i>
-                {{ $t('m.UserHome_Score') }}
-              </p>
-              <p class="data-number">{{ getSumScore(profile.scoreList) }}</p>
-            </el-card>
-          </el-col>
-          <!--          <el-col :md="6" :sm="24">-->
-          <!--            <el-card shadow="always" class="rating">-->
-          <!--              <p>-->
-          <!--                <i class="fa fa-user-secret" aria-hidden="true"></i>-->
-          <!--                {{ $t('m.UserHome_Rating') }}-->
-          <!--              </p>-->
-          <!--              <p class="data-number">-->
-          <!--                {{ profile.rating ? profile.rating : '&#45;&#45;' }}-->
-          <!--              </p>-->
-          <!--            </el-card>-->
-          <!--          </el-col>-->
         </el-row>
-        <el-tabs style="margin-top:1rem;" type="card">
-          <el-tab-pane :label="$t('m.Personal_Profile')">
-            <div class="signature-body">
-              <div
-                  v-if="contentHtml"
-                  v-dompurify-html="contentHtml"
-                  v-highlight
-                  class="markdown-body"
-              ></div>
-              <div v-else class="markdown-body">
-                <p>{{ $t('m.Not_set_yet') }}</p>
-              </div>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane :label="$t('m.UserHome_Solved_Problems')"
-          >
-            <div id="problems">
-              <div v-if="profile.solvedList.length">
-                {{ $t('m.List_Solved_Problems') }}
-                <el-button
-                    circle
-                    icon="el-icon-refresh"
-                    size="mini"
-                    type="primary"
-                    @click="freshProblemDisplayID"
-                ></el-button>
-              </div>
-              <p v-else>{{ $t('m.UserHome_Not_Data') }}</p>
-              <div class="btns">
-                <div
-                    v-for="problemID of profile.solvedList"
-                    :key="problemID"
-                    class="problem-btn"
-                >
-                  <el-button type="success" @click="goProblem(problemID)">{{
-                      problemID
-                    }}
-                  </el-button>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane
-          >
-        </el-tabs>
       </div>
     </el-card>
   </div>
@@ -175,6 +102,7 @@ export default {
   },
   data() {
     return {
+      total_ac:0,
       profile: {
         username: '',
         nickname: '',
@@ -188,6 +116,13 @@ export default {
         solvedList: [],
       },
     };
+  },
+  created() {
+    let temp={username:this.$store.getters.userName};
+    console.log(temp)
+    api.getTotalAcnum(temp).then((res)=>{
+      this.total_ac=res.data.total_ac;
+    })
   },
   mounted() {
     this.init();
