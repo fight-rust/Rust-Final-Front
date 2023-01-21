@@ -352,6 +352,10 @@ export default {
             console.log("success",res.data);
             this.submissions = res.data;
             console.log(this.submissions);
+            this.submissions.forEach(sub=>{
+              var date = new Date(sub.created_time).toJSON();
+              sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+            })
             // this.subList = {};
             // this.total = res.data.data.total;
             this.loadingTable = false;
@@ -547,6 +551,10 @@ export default {
                 console.log("success",res.data);
                 this.submissions = res.data;
                 console.log(this.submissions);
+                this.submissions.forEach(sub=>{
+                  var date = new Date(sub.created_time).toJSON();
+                  sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+                })
               },
               (err) => {
                 console.log("fail",err);
@@ -582,6 +590,10 @@ export default {
                 console.log("success",res.data);
                 this.submissions = res.data;
                 console.log(this.submissions);
+                this.submissions.forEach(sub=>{
+                  var date = new Date(sub.created_time).toJSON();
+                  sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
+                })
               },
               (err) => {
                 console.log("fail",err);
