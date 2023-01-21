@@ -346,6 +346,9 @@ export default {
             this.submissions = res.data;
             console.log(this.submissions);
             this.submissions.forEach(sub=>{
+              if(sub.result=='Compiling'){
+                sub.run_time = '/';
+              }
               var date = new Date(sub.created_time).toJSON();
               sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
             })
@@ -584,6 +587,9 @@ export default {
                 this.submissions = res.data;
                 console.log(this.submissions);
                 this.submissions.forEach(sub=>{
+                  if(sub.result=='Compiling'){
+                      sub.run_time = '/';
+                    }
                   var date = new Date(sub.created_time).toJSON();
                   sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
                 })

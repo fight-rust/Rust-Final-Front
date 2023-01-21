@@ -226,31 +226,32 @@
         <el-table-column
           prop="id"
           label="评测序号"
-          width="100">
+          width="80">
         </el-table-column>
         <el-table-column
           prop="contest"
-          label="比赛"
-          width="100">
+          label="比赛序号"
+          width="80">
         </el-table-column>
         <el-table-column
           prop="problem"
-          label="问题"
-          width="100">
+          label="题目序号"
+          width="80">
         </el-table-column>
           <el-table-column
           prop="user"
           label="用户"
-          min-width="100">
+          min-width="50">
         </el-table-column>
           <el-table-column
           prop="created_time"
           label="提交时间"
-          width="150">
+          min-width="150">
         </el-table-column>
           <el-table-column
           prop="result"
-          label="结果">
+          label="结果"
+          min-width="150">
         </el-table-column>
         <el-table-column
         prop="run_time"
@@ -599,7 +600,6 @@ export default {
       userExtraFile: null,
       fileContent: '',
       fileName: '',
-
       mySubmit:[],
     };
   },
@@ -660,6 +660,9 @@ export default {
             this.mySubmit = res.data;
             console.log(this.mySubmit);
             this.mySubmit.forEach(sub=>{
+              if(sub.result=='Compiling'){
+                sub.run_time = '/';
+              }
               var date = new Date(sub.created_time).toJSON();
               sub.created_time=new Date(+new Date(date)+8*3600*1000).toISOString().replace(/T/g,' ').replace(/\.[\d]{3}Z/,'');
             })
@@ -1000,10 +1003,10 @@ export default {
         myMessage.error(this.$i18n.t('m.Code_Length_can_not_exceed_65535'));
         return;
       }
+      this.judging = true;
       this.submissionId = '';
       this.result = {status: 9};
       // this.submitting = true;
-      this.judging = true;
       let data = {
         source_code:this.code,
         user_name:this.$store.getters.userName,
@@ -1012,6 +1015,7 @@ export default {
       };
       api.submitCode(data).then(
           (res) => {
+            // this.getMySubmission();
             this.judging = false;
             this.$message.success('评测完成!');
             this.getMySubmission();
@@ -1146,6 +1150,13 @@ export default {
         this.init();
       }
     },
+    judging:{
+      handler(newValue,oldValue){
+        if(newValue == true){
+          this.getMySubmission();
+        }
+      }
+    }
   },
 };
 </script>
