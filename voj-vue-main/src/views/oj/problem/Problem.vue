@@ -126,7 +126,7 @@
 
                 <div id="problem-content">
                   <template v-if="problemData.problem.content">
-                    <p class="title">{{ $t('m.Description') }}</p>
+                    <p class="title" style="white-space: pre-wrap;">{{ $t('m.Description') }}</p>
                     <p
                         v-highlight
                         v-katex
@@ -1373,6 +1373,7 @@ a {
 }
 
 #problem-content .title {
+  white-space: pre-wrap;
   font-size: 16px;
   font-weight: 600;
   margin: 25px 0 8px 0;

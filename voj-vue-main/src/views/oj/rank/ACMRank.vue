@@ -18,26 +18,8 @@
         <vxe-table-column title="排名" min-width="50" type="seq"></vxe-table-column>
         <vxe-table-column :title="$t('m.User')" field="uname" min-width="150">
         </vxe-table-column>
-<!--        <vxe-table-column :title="$t('m.AC')" field="ac" min-width="80">-->
-<!--          <template v-slot="{ row }">-->
-<!--            <span>-->
-<!--              <a-->
-<!--                  style="color:rgb(87, 163, 243);"-->
-<!--                  @click="goUserACStatus(row.username)"-->
-<!--              >{{ row.ac }}</a-->
-<!--              >-->
-<!--            </span>-->
-<!--          </template>-->
-<!--        </vxe-table-column>-->
         <vxe-table-column :title="$t('m.Total')" field="uacnum" min-width="100">
         </vxe-table-column>
-<!--        <vxe-table-column :title="$t('m.Rating')" min-width="80">-->
-<!--          <template v-slot="{ row }">-->
-<!--            <span>{{ getACRate(row.ac, row.total) }}</span>-->
-<!--          </template>-->
-<!--        </vxe-table-column>-->
-<!--        <vxe-table-column :title="$t('m.Signature')" field="signature" min-width="300" show-overflow="ellipsis">-->
-<!--        </vxe-table-column>-->
       </vxe-table>
 
       <Pagination
