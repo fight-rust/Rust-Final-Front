@@ -25,6 +25,7 @@ export const m = {
   Contest_Admin: '比赛管理',
   Contest_List: '比赛列表',
   Create_Contest: '创建比赛',
+  Delete_Contest: '删除比赛',
   Discussion: '讨论管理',
   Discussion_Admin: '讨论管理',
   Home_Page: '主页',
@@ -355,6 +356,8 @@ export const m = {
 
   // /views/admin/contest/Contest.vue
   Contest_Title: '比赛标题',
+  Delete_Contest_Title:'比赛ID',
+  Delete_Contest_placeholder:'请输入比赛ID，删除多个比赛则ID用分号隔开，如1;2;3',
   Contest_pproblem: '比赛题目',
   Contest_pproblemplaceholder: '输入题目id，相邻id用分号;隔开，如:1;2;3。',
   Contest_Description: '比赛描述',

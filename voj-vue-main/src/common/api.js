@@ -1242,10 +1242,8 @@ const adminApi = {
     })
   },
   admin_deleteContest(cid) {
-    return ajax('/api/admin/contest', 'delete', {
-      params: {
+    return ajax('/api/admin/contestdelete', 'post', {
         cid
-      }
     })
   },
   admin_changeContestVisible(cid, visible, uid) {

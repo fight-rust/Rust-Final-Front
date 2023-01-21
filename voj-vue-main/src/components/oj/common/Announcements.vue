@@ -24,21 +24,25 @@
       </span>
     </div>
     <transition-group name="el-collapse-transition">
-      <div
-          v-if="!announcements.length"
-          key="no-announcement"
-          class="no-announcement"
-      >
-        <el-empty :description="$t('m.No_Announcements')"></el-empty>
-      </div>
+<!--      <div-->
+<!--          v-if="!announcements.length"-->
+<!--          key="no-announcement"-->
+<!--          class="no-announcement"-->
+<!--      >-->
+<!--        <el-empty :description="$t('m.No_Announcements')"></el-empty>-->
+<!--      </div>-->
       <template v-if="listVisible">
         <ul key="list" class="announcements-container">
-          <li v-for="announcement in announcements" :key="announcement.title">
+          <li>
             <div class="flex-container">
               <div class="title">
+                <div class="bighomeworkdiv"><a class="bighomework">Rust大作业</a></div>
+
                 <a class="entry" @click="goAnnouncement(announcement)">
-                  {{ announcement.title }}</a
+                  实现功能:用户登录、注册、鉴权，题目管理，多比赛管理，评测JOB管理，非阻塞评测，数据库存储，排行榜</a
                 >
+                <div ><a class="entry">前端仓库链接:https://github.com/fight-rust/Rust-Final-Front</a></div>
+                <div><a class="entry">后端仓库链接:https://github.com/fight-rust/Rust-Final-Back</a></div>
               </div>
 
               <div class="info">
@@ -235,6 +239,16 @@ export default {
 
 .announcement-animate-enter-active {
   animation: fadeIn 1s;
+}
+
+.bighomework{
+  font-size: 20px;
+  font-style: oblique;
+  color: #2087be;
+}
+
+.bighomeworkdiv{
+  height: 60px;
 }
 
 ul {

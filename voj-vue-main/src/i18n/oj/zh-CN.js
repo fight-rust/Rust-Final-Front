@@ -110,6 +110,7 @@ export const m = {
   Female: '女',
   Secrecy: '保密',
   Save: '创建',
+  DeleteContest:'删除',
   Upload: '上传',
   Your_new_avatar: '您的新头像',
   File_type_not_support: '文件类型不支持',

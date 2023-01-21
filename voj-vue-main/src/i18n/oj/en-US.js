@@ -111,6 +111,7 @@ export const m = {
   Female: 'Female',
   Secrecy: 'Secrecy',
   Save: 'Save',
+  DeleteContest:'Delete',
   Upload: 'Upload',
   Your_new_avatar: 'Your new avatar',
   File_type_not_support: 'File type not support',
