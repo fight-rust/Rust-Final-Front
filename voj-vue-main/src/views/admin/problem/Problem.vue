@@ -15,11 +15,10 @@
           <el-col :span="24">
             <el-form-item
                 :label="$t('m.Problem_Display_ID')"
-                prop="problemId"
                 required
             >
               <el-input
-                  v-model="problem.problemId"
+                  v-model="problem.title"
                   :disabled="problem.isRemote"
                   :placeholder="$t('m.Problem_Display_ID')"
               >
@@ -32,7 +31,7 @@
           <el-col :span="24">
             <el-form-item :label="$t('m.Title')" prop="title" required>
               <el-input
-                  v-model="problem.title"
+                  v-model="problem.content"
                   :placeholder="$t('m.Title')"
               ></el-input>
             </el-form-item>
@@ -43,7 +42,7 @@
           <el-col :span="24">
             <el-form-item :label="$t('m.pExample')" prop="title" required>
               <el-input
-                  v-model="problem.title"
+                  v-model="problem.example"
                   :placeholder="$t('m.pExample')"
               ></el-input>
             </el-form-item>
@@ -83,7 +82,7 @@ export default {
       rules: {
         title: {
           required: true,
-          message: 'Title is required',
+          message: 'value is required',
           trigger: 'blur',
         },
         input_description: {
@@ -113,6 +112,8 @@ export default {
       problem: {
         id: null,
         title: '',
+        content:'',
+        example:'',
         problemId: '',
         description: '',
         input: '',
@@ -636,312 +637,27 @@ export default {
     },
 
     submit() {
-      if (!this.problem.problemId) {
-        myMessage.error(
-            this.$i18n.t('m.Problem_Display_ID') +
-            ' ' +
-            this.$i18n.t('m.is_required')
-        );
+      if(!this.problem.title){
+        myMessage.error("题目名不能为空！");
         return;
       }
-
-      if (this.contestID) {
-        if (!this.contestProblem.displayId) {
-          myMessage.error(
-              this.$i18n.t('m.Contest_Display_ID') +
-              ' ' +
-              this.$i18n.t('m.is_required')
-          );
-          return;
-        }
-        // if(!/^[0-9]*$/.test(this.contestProblem.displayId)){
-        //   myMessage.error(
-        //       this.$i18n.t('m.The_Problem_Display_ID_in_the_Contest_format_error')
-        //   );
-        //   return;
-        // }
-        if (!this.contestProblem.displayTitle) {
-          myMessage.error(
-              this.$i18n.t('m.Contest_Display_Title') +
-              ' ' +
-              this.$i18n.t('m.is_required')
-          );
-          return;
-        }
-      }
-
-      // // 不强制校验题目样例不能为空
-      // if (!this.problem.examples.length && !this.problem.isRemote) {
-      //   myMessage.error(
-      //     this.$i18n.t('m.Problem_Examples') +
-      //       ' ' +
-      //       this.$i18n.t('m.is_required')
-      //   );
-      //   return;
-      // }
-
-      if (!this.problem.isRemote) {
-        // 选择手动输入
-        if (!this.problem.isUploadCase) {
-          if (!this.problemSamples.length) {
-            myMessage.error(
-                this.$i18n.t('m.Judge_Samples') +
-                ' ' +
-                this.$i18n.t('m.is_required')
-            );
-            return;
-          }
-
-          for (let sample of this.problemSamples) {
-            if (!sample.input && !sample.output) {
-              myMessage.error(
-                  this.$i18n.t('m.Sample_Input') +
-                  ' or ' +
-                  this.$i18n.t('m.Sample_Output') +
-                  ' ' +
-                  this.$i18n.t('m.is_required')
-              );
-              return;
-            }
-          }
-
-          // 同时是oi题目，则对应的每个测试样例的io得分不能为空或小于0
-          if (this.problem.type == 1) {
-            for (let i = 0; i < this.problemSamples.length; i++) {
-              if (this.problemSamples[i].score == '') {
-                myMessage.error(
-                    this.$i18n.t('m.Problem_Sample') +
-                    (i + 1) +
-                    ' ' +
-                    this.$i18n.t('m.Score_must_be_an_integer')
-                );
-                return;
-              }
-              try {
-                if (parseInt(this.problemSamples[i].score) < 0) {
-                  myMessage.error(
-                      this.$i18n.t('m.Problem_Sample') +
-                      (i + 1) +
-                      ' ' +
-                      this.$i18n.t('m.Score_must_be_greater_than_or_equal_to_0')
-                  );
-                  return;
-                }
-              } catch (e) {
-                myMessage.error(this.$i18n.t('m.Score_must_be_an_integer'));
-                return;
-              }
-            }
-          }
-        } else {
-          // 选择上传文件
-
-          // 两种情况：create模式是需要校验是否上传成功了，edit模式获取题目数据已经默认为true了，若是edit又重新上传数据，需要校验
-          if (!this.testCaseUploaded) {
-            this.error.testCase =
-                this.$i18n.t('m.Judge_Samples') +
-                ' ' +
-                this.$i18n.t('m.is_required');
-            myMessage.error(this.error.testCase);
-            return;
-          }
-
-          // 如果是oi题目，需要检查上传的数据的得分
-          if (this.problem.type == 1) {
-            for (let i = 0; i < this.problemSamples.length; i++) {
-              if (this.problemSamples[i].score == '') {
-                myMessage.error(
-                    this.$i18n.t('m.Problem_Sample') +
-                    (i + 1) +
-                    ' ' +
-                    this.$i18n.t('m.Score_must_be_an_integer')
-                );
-                return;
-              }
-              try {
-                if (parseInt(this.problemSamples[i].score) < 0) {
-                  myMessage.error(
-                      this.$i18n.t('m.Problem_Sample') +
-                      (i + 1) +
-                      ' ' +
-                      this.$i18n.t('m.Score_must_be_greater_than_or_equal_to_0')
-                  );
-                  return;
-                }
-              } catch (e) {
-                myMessage.error(this.$i18n.t('m.Score_must_be_an_integer'));
-                return;
-              }
-            }
-          }
-        }
-      }
-      if (!this.problemTags.length) {
-        this.error.tags =
-            this.$i18n.t('m.Tags') + ' ' + this.$i18n.t('m.is_required');
-        myMessage.error(this.error.tags);
+      if(!this.problem.content){
+        myMessage.error("题目内容不能为空！");
         return;
       }
-      let isChangeModeCode =
-          this.spjRecord.spjLanguage != this.problem.spjLanguage ||
-          this.spjRecord.spjCode != this.problem.spjCode;
-      if (!this.problem.isRemote) {
-        if (this.problem.judgeMode != 'default') {
-          if (!this.problem.spjCode) {
-            this.error.spj =
-                this.$i18n.t('m.Spj_Or_Interactive_Code') +
-                ' ' +
-                this.$i18n.t('m.is_required');
-            myMessage.error(this.error.spj);
-          } else if (!this.problem.spjCompileOk && isChangeModeCode) {
-            this.error.spj = this.$i18n.t(
-                'm.Spj_Or_Interactive_Code_not_Compile_Success'
-            );
-          }
-          if (this.error.spj) {
-            myMessage.error(this.error.spj);
-            return;
-          }
-        }
-      }
-
-      if (!this.problemLanguages.length) {
-        this.error.languages =
-            this.$i18n.t('m.Language') + ' ' + this.$i18n.t('m.is_required');
-        myMessage.error(this.error.languages);
+      if(!this.problem.example){
+        myMessage.error("题目描述不能为空！");
         return;
       }
-
-      let funcName = {
-        'admin-create-problem': 'admin_createProblem',
-        'admin-edit-problem': 'admin_editProblem',
-        'admin-create-contest-problem': 'admin_createContestProblem',
-        'admin-edit-contest-problem': 'admin_editContestProblem',
-      }[this.routeName];
-      // edit contest problem 时, contest_id会被后来的请求覆盖掉
-      if (funcName === 'editContestProblem') {
-        this.problem.cid = this.contest.id;
-      }
-      if (
-          funcName === 'admin_createProblem' ||
-          funcName === 'admin_createContestProblem'
-      ) {
-        this.problem.author = this.userInfo.username;
-      }
-
-      var ojName = 'LOCAL';
-      if (this.problem.isRemote) {
-        ojName = this.problem.problemId.split('-')[0];
-      }
-
-      let problemTagList = Object.assign([], this.problemTags);
-      for (let i = 0; i < problemTagList.length; i++) {
-        //避免后台插入违反唯一性
-        for (let tag2 of this.allTags) {
-          if (problemTagList[i].name == tag2.name && tag2.oj == ojName) {
-            problemTagList[i] = tag2;
-            break;
-          }
-        }
-      }
-      this.problemCodeTemplate = [];
-      let problemLanguageList = Object.assign([], this.problemLanguages); // 深克隆 防止影响
-      for (let i = 0; i < problemLanguageList.length; i++) {
-        problemLanguageList[i] = {name: problemLanguageList[i]};
-        for (let lang of this.allLanguage) {
-          if (problemLanguageList[i].name == lang.name) {
-            problemLanguageList[i] = lang;
-            if (this.codeTemplate[lang.name].status) {
-              this.problemCodeTemplate.push({
-                id: this.codeTemplate[lang.name].id,
-                pid: this.pid,
-                code: this.codeTemplate[lang.name].code,
-                lid: lang.id,
-                status: this.codeTemplate[lang.name].status,
-              });
-            }
-            break;
-          }
-        }
-      }
-      let problemDto = {}; // 上传给后台的数据
-      if (!this.problem.isRemote) {
-        if (this.problem.judgeMode != 'default') {
-          if (isChangeModeCode) {
-            problemDto['changeModeCode'] = true;
-          }
-        } else {
-          // 原本是spj或交互，但现在关闭了
-          if (!this.spjRecord.spjCode) {
-            problemDto['changeModeCode'] = true;
-            this.problem.spjCode = null;
-            this.problem.spjLanguage = null;
-          }
-        }
-
-        if (this.userExtraFile && Object.keys(this.userExtraFile).length != 0) {
-          this.problem.userExtraFile = JSON.stringify(this.userExtraFile);
-        } else {
-          this.problem.userExtraFile = null;
-        }
-
-        if (
-            this.judgeExtraFile &&
-            Object.keys(this.judgeExtraFile).length != 0
-        ) {
-          this.problem.judgeExtraFile = JSON.stringify(this.judgeExtraFile);
-        } else {
-          this.problem.judgeExtraFile = null;
-        }
-      }
-
-      problemDto['problem'] = Object.assign({}, this.problem); // 深克隆
-      problemDto.problem.examples = utils.examplesToString(
-          this.problem.examples
-      ); // 需要转换格式
-
-      problemDto['codeTemplates'] = this.problemCodeTemplate;
-      problemDto['tags'] = problemTagList;
-      problemDto['languages'] = problemLanguageList;
-      problemDto['isUploadTestCase'] = this.problem.isUploadCase;
-      problemDto['uploadTestcaseDir'] = this.problem.uploadTestcaseDir;
-      problemDto['judgeMode'] = this.problem.judgeMode;
-
-      // 如果选择上传文件，则使用上传后的结果
-      if (this.problem.isUploadCase) {
-        problemDto['samples'] = this.problem.testCaseScore;
-      } else {
-        problemDto['samples'] = this.problemSamples;
-      }
-      api[funcName](problemDto)
-          .then((res) => {
-            if (
-                this.routeName === 'admin-create-contest-problem' ||
-                this.routeName === 'admin-edit-contest-problem'
-            ) {
-              if (res.data.data) {
-                // 新增题目操作 需要使用返回来的pid
-                this.contestProblem['pid'] = res.data.data.pid;
-                this.contestProblem['cid'] = this.$route.params.contestId;
-              }
-              api.admin_setContestProblemInfo(this.contestProblem).then((res) => {
-                myMessage.success('success');
-                this.$router.push({
-                  name: 'admin-contest-problem-list',
-                  params: {contestId: this.$route.params.contestId},
-                });
-              });
-            } else {
-              myMessage.success('success');
-              if (this.backPath) {
-                this.$router.push({path: this.backPath});
-              } else {
-                this.$router.push({name: 'admin-problem-list'});
-              }
-            }
-          })
-          .catch(() => {
-          });
+      let res={title: this.problem.title,content: this.problem.content,example: this.problem.example};
+      console.log(res);
+      api.admin_createProblem(res).then(res=>{
+        myMessage.success('success');
+        this.$router.push({
+          name: 'admin-problem-list',
+          query: {refresh: 'true'},
+        });
+      })
     },
   },
   computed: {
